@@ -1,7 +1,7 @@
 interface message {
   created_at: string;
-  message: string;
-  readAt: string;
+  content: string;
+  read_at: string;
   sender: string;
   status: string;
 }
@@ -27,34 +27,27 @@ interface numbers {
   sun: numbersResult;
 }
 
+export type commentMessage = {
+  created_at: string,
+  sender: string,
+  sender_id: string,
+  content: string
+}
+
 export type Database = {
   public: {
     Tables: {
       chats: {
         Row: {
-          created_at?: string;
-          id?: number;
+          created_at: string;
+          id: number;
           lastMessageContent?: string | null;
           lastMessageDate?: string | null;
           members?: string[] | null;
           messages?: message[] | null;
         },
-        Insert: {
-          created_at?: string;
-          id?: number;
-          lastMessageContent?: string | null;
-          lastMessageDate?: string | null;
-          members?: string[] | null;
-          messages?: message[] | null;
-        },
-        Update: {
-          created_at?: string;
-          id?: number;
-          lastMessageContent?: string | null;
-          lastMessageDate?: string | null;
-          members?: string[] | null;
-          messages?: message[] | null;
-        },
+        Insert: Partial<Database['public']['Tables']['chats']['Row']>,
+        Update: Partial<Database['public']['Tables']['chats']['Row']>,
         Relationships: []
       };
       posts: {
@@ -69,10 +62,19 @@ export type Database = {
           files?: file[];
           id: number;
           accessible_id?: string[];
-          comments?: string[];
+          comments?: PostComment[]
         }
         Insert: Partial<Database["public"]["Tables"]["posts"]["Row"]>
         Update: Partial<Database["public"]["Tables"]["posts"]["Row"]>
+        Relationships?: [];
+      };
+      post_comments: {
+        Row: {
+          id: number;
+          messages?: commentMessage[]
+        }
+        Insert: Partial<Database["public"]["Tables"]["post_comments"]["Row"]>
+        Update: Partial<Database["public"]["Tables"]["post_comments"]["Row"]>
         Relationships?: [];
       };
       users: {
@@ -101,6 +103,8 @@ export type Database = {
 };
 
 export type Post = Database['public']['Tables']['posts']['Row'];
+
+export type PostComment = Database['public']['Tables']['post_comments']['Row'];
 
 export type User = Database['public']['Tables']['users']['Row'];
 

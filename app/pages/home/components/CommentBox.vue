@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import facebookIcon from "~/assets/images/facebook.gif";
 import instagramIcon from "~/assets/images/instagram.gif";
-import type { Post } from "~/types/database.types";
-const { getPost } = useDataBase();
+import type { commentMessage, Post, PostComment } from "~/types/database.types";
+const { timeStampToString, dateToString } = useCommon();
 
 const props = defineProps<{
   postId: number
   content?: string
-  postFavorite?: Boolean
+  postFavorite?: Boolean,
+  comments?: PostComment
 }>();
 const emit = defineEmits<{
-  (e: 'updateFavorite', value: Partial<Post>): void
+  (e: 'updateFavorite', value: Partial<Post>): void,
+  (e: 'updateComments', value: Partial<PostComment>): void
 }>();
 
 const isFavorite = ref(props.postFavorite)
 const authStore = useAuthStore();
 const showShare = ref(false);
+const comments = ref(props.comments);
 const showComment = ref(0);
 const newComment = ref("");
 const shareLists = reactive([
@@ -23,20 +26,6 @@ const shareLists = reactive([
   { name: 'Instagram', icon: instagramIcon },
   { name: 'Link', icon: 'link' }
 ]);
-
-const sendComment = async() => {
-  if(newComment.value.trim() === "") return;
-
-  const docData = {
-    sender: authStore.userInfo.name,
-    senderId: authStore.userId,
-    content: newComment.value,
-    created_at: Date.now()
-  };
-
-  // await createPostComment(doc.id, docData)
-  newComment.value = "";
-};
 
 const onSelect = (option: any) => {
   console.log(option)
@@ -58,18 +47,33 @@ const onClickIcon = async(key: string) => {
     case "comment":
       if (showComment.value === props.postId) {
         showComment.value = 0;
-        // stopWatcher("comment");
       } else {
-        // if (showComment.value !== 0) stopWatcher("comment");
         showComment.value = props.postId;
-        // const unsubscribeComment = watchPostsComments(item.id, updateComment);
-        // addWatcher("comment", unsubscribeComment);
-      }
+      };
+      sendComment()
       break;
     case "share":
       showShare.value = true;
       break;
   }
+};
+
+const sendComment = async() => {
+  if(newComment.value.trim() === "") return;
+
+  const messages: (commentMessage[] | undefined) = comments.value?.messages;
+  if (messages === undefined) return;
+  const newMessage: commentMessage = {
+    created_at: dateToString(new Date(Date.now())),
+    sender: authStore.userInfo.name ?? "",
+    sender_id: authStore.userId,
+    content: newComment.value
+  };
+  const newMessages = [...messages, newMessage];
+  
+  emit("updateComments", {id: props.postId, messages: newMessages});
+
+  newComment.value = "";
 };
 </script>
 
@@ -91,16 +95,15 @@ const onClickIcon = async(key: string) => {
       </div>
       <div v-show="showComment === postId" class="activity__comment">
         <van-divider>{{$t("comment")}}</van-divider>
-        <!-- <ul class="comment__list">
-          <li v-for="(one, idx) of item.comments" :key="idx">
-            {{ one }}
-            <span>{{ timeStampToString(one.created_at) }}</span>
-            <span v-if="one.sender">｜</span>
-            <span>{{ one.sender }}</span>
-            <span v-if="one.content">：</span>
-            <span>{{ one.content }}</span>
+        <ul class="comment__list">
+          <li v-for="(comment, idx) of comments?.messages" :key="idx">
+            <span>{{ timeStampToString(comment.created_at) }}</span>
+            <span v-if="comment.sender">｜</span>
+            <span>{{ comment.sender }}</span>
+            <span v-if="comment.content">：</span>
+            <span>{{ comment.content }}</span>
           </li>
-        </ul> -->
+        </ul>
         <van-cell-group class="comment__content" inset>
           <van-field 
             v-model="newComment" 

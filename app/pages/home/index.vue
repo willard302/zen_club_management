@@ -1,19 +1,17 @@
 <script setup lang="ts">
 import { useCommon } from "~/composables/useCommon";
-import type { Post } from "~/types/database.types";
+import type { commentMessage, Post, PostComment } from "~/types/database.types";
 import CommentBox from "./components/CommentBox.vue";
 const authStore = useAuthStore();
 const router = useRouter();
-const { getPost, getPosts, updatePost, deletePost } = useDataBase();
+const { getPost, getPostComments, getPosts, updatePost, updatePostComment, deletePost } = useDataBase();
 const { timeStampToString } = useCommon();
 
 const isLoading = ref(false);
 const isFinished = ref(false);
 const showFavorite = ref(false);
 const showOptions = ref(false);
-
 const subNavs = ref<Post | null>(null);
-
 const list = ref<Post[]>([]);
 const currentClass = ref("all");
 const optionLists = [
@@ -37,45 +35,41 @@ const handleToggle = (item: itemType) => {
 
 const onLoad = async() => {
   isLoading.value = true;
-  await loadArticles();
+  await loadPosts();
   isLoading.value = false;
 };
 
-const loadArticles = async() => {
+const loadPosts = async() => {
   if (isFinished.value) return;
 
   try {
     isLoading.value = true;
 
     if (!authStore.userId) return;
-    const posts = await getPosts();
-    if (posts.error) {
-      console.error("Failed to fetch posts: ", posts.error);
-    } else {
-      list.value = posts.data || [];
-      isFinished.value = true;
-    };
-    
-    // const existingPostsMap = new Map(
-    //   list.value.map(post => [post, post])
-    // );
-    
-    // const newPosts = data.filter(post => !existingPostsMap.has(post.id));
-    
-    // newPosts.forEach(post => {
-    //   post.favorite = post.trackers_id ? post.trackers_id.includes(authStore.userId.value) : false;
-    //   post.comments = [];
-    //   existingPostsMap.set(post.id, post);
-    // });
-    
-    // list.value = Array.from(existingPostsMap.values());
 
-    if (list.value && list.value.length !== 0) {
-      list.value.forEach(post => {
-        post.favorite = post.trackers_id ? post.trackers_id.includes(authStore.userId) : false;
-        // post.comments = []
+    const {data: posts, error} = await getPosts();
+    if (error) {
+      console.error("Failed to fetch posts: ", error);
+      return;
+    } 
+    if(!posts || posts.length === 0) {
+      isFinished.value = true;
+      return;
+    };
+
+    list.value = await Promise.all(
+      posts.map(async (item: Post) => {
+        const comments = await getPostComments(item.id);
+        return {
+          ...item,
+          comments: comments,
+          favorite: item.trackers_id
+            ? item.trackers_id.includes(authStore.userId)
+            : false,
+        }
       })
-    }
+    );
+    isFinished.value = true;
   } catch (error) {
     console.error("Failed to load posts: ", error);
   } finally {
@@ -115,14 +109,18 @@ const updateFavorite = async(updateData: Partial<Post>) => {
   } else {
     newTrackers = [...trackers, authStore.userId]
   };
-  const result = await updatePost(updateData.id as number, {"trackers_id": newTrackers});
+  await updatePost(updateData.id as number, {"trackers_id": newTrackers});
   
   showSuccessToast({
     message: 'success'
   });
-
-  console.log(result)
 };
+
+const updateComments = async(updateData: Partial<PostComment>) => {
+  await updatePostComment(updateData.id as number, updateData as PostComment)
+  setTimeout(async() => await getPostComments(updateData.id as number), 1000)
+
+}
 
 </script>
 
@@ -184,7 +182,9 @@ const updateFavorite = async(updateData: Partial<Post>) => {
             :post-id="item.id"
             :content="item.content" 
             :is-favorite="item.favorite"
+            :comments="item.comments ? item.comments[0] : undefined"
             @update-favorite="updateFavorite"
+            @update-comments="updateComments"
           />
         </div>
       </van-cell>

@@ -1,4 +1,4 @@
-import type { User, Post } from "../types/database.types";
+import type { User, Post, PostComment } from "../types/database.types";
 export const useDataBase = () => {
   const client = useSupabaseClient();
   const authStore = useAuthStore();
@@ -28,12 +28,12 @@ export const useDataBase = () => {
     docId: number, 
     attribute?: K
   ): Promise<Pick<Post, K> | Post> => {
-    let query = client
+    const {data, error} = await client
       .from("posts")
       .select(attribute ? attribute : "*")
       .eq("id", docId)
       .single();
-    const {data, error} = await query;
+
     if (error) throw error;
     return data;
   };
@@ -46,16 +46,16 @@ export const useDataBase = () => {
     return await query;
   };
 
-  const getPostComments = async(postId: number) => {
-    if (!postId) return;
+  const getPostComments = async(
+    postId: number): Promise<PostComment[]> => {
+      const {data, error} = await client
+        .from("post_comments")
+        .select("*")
+        .eq('id', postId)
 
-    let query = client
-      .from("postComments")
-      .select("*")
-      .eq('id', postId);
-
-    return await query;
-  }
+      if(error) throw error;
+      return data;
+  };
 
   const updatePost = async(
     postId: number, 
@@ -68,6 +68,17 @@ export const useDataBase = () => {
       .select()
   };
 
+  const updatePostComment = async(
+    postId: number,
+    updateData: PostComment
+  ) => {
+    return await (client as any)
+      .from("post_comments")
+      .update(updateData)
+      .eq('id', postId)
+      .select()
+  }
+
   const deletePost = async(postId: number) => {
     const response = await client
       .from('posts')
@@ -77,11 +88,12 @@ export const useDataBase = () => {
 
   return {
     getUser,
-    updateUser,
     getPost,
     getPostComments,
     getPosts,
+    updateUser,
     updatePost,
+    updatePostComment,
     deletePost
   }
 }
