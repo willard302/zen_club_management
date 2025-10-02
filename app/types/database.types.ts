@@ -103,9 +103,13 @@ export type Database = {
 };
 
 export type Post = Database['public']['Tables']['posts']['Row'];
+export type PostInsert = Database['public']['Tables']['posts']['Insert'];
+export type PostUpdate = Database['public']['Tables']['posts']['Update'];
 
 export type PostComment = Database['public']['Tables']['post_comments']['Row'];
+export type PostCommentInsert = Database['public']['Tables']['post_comments']['Insert'];
+export type PostCommentUpdate = Database['public']['Tables']['post_comments']['Update'];
 
 export type User = Database['public']['Tables']['users']['Row'];
-
+export type UserInsert = Database['public']['Tables']['users']['Insert'];
 export type UserUpdate = Database['public']['Tables']['users']['Update'];

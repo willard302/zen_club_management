@@ -9,5 +9,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
     case "/newFriends": return authStore.setTabBarActive("newFriends");
     case "/contact": return authStore.setTabBarActive("contact");
     case "/profile": return authStore.setTabBarActive("profile");
+    default: return authStore.setTabBarActive("");
   };
 })

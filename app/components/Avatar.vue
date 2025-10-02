@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type UploaderFileListItem } from 'vant';
+import type{ UploaderFileListItem } from 'vant';
 const { uploadFile } = useStorage();
 const { updateUser } = useDataBase();
 const authStore = useAuthStore();
@@ -8,15 +8,20 @@ const avatar_url = ref<UploaderFileListItem[]>([
   { url: authStore.userInfo.avatar_url }
 ]);
 
-const onAfterRead = async (fileItem: any) => {
-  const file = fileItem.file as File | undefined;
-  if (!file) return;
+const onAfterRead = async (
+  fileItem: UploaderFileListItem | UploaderFileListItem[]
+) => {
+  const file = fileItem as UploaderFileListItem;
+  if (!file || !file.file) return;
 
   const url = await uploadFile(file, "icc_avatar");
-  if (url) {
-    avatar_url.value = [{ url }];
-    updateUser(authStore.userId, {avatar_url: url})
-  }
+  if (!url) throw "There is no url.";
+
+  avatar_url.value = [{ url: url[0] }];
+  const {data, error} = await updateUser(authStore.userId, {avatar_url: url[0]});
+  if (error) throw error;
+  if (!data) throw `there is no data`
+  authStore.userInfo = {...authStore.userInfo, avatar_url: url[0]};
 };
 
 </script>
@@ -28,9 +33,9 @@ const onAfterRead = async (fileItem: any) => {
           v-model="avatar_url"
           :after-read="onAfterRead"
           preview-size="160px"
-          reupload
-          max-count="1"
           :deletable="false"
+          :show-upload="false"
+          reupload
         />
       </template>
     </van-field>

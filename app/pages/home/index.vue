@@ -90,7 +90,9 @@ const onClickAction = async(option: option) => {
   switch(option.name) {
     case "delete":
       if(subNavs.value && typeof subNavs.value.id === 'number') {
-        await deletePost(subNavs.value.id)
+        await deletePost(subNavs.value.id);
+        await getPosts()
+        showSuccessToast({message: "delete successfully."})
       }
       showOptions.value = false;
       break;
@@ -117,9 +119,8 @@ const updateFavorite = async(updateData: Partial<Post>) => {
 };
 
 const updateComments = async(updateData: Partial<PostComment>) => {
-  await updatePostComment(updateData.id as number, updateData as PostComment)
-  setTimeout(async() => await getPostComments(updateData.id as number), 1000)
-
+  await updatePostComment(updateData.id as number, updateData as PostComment);
+  setTimeout(async() => await getPostComments(updateData.id as number), 1000);
 }
 
 </script>
@@ -166,7 +167,7 @@ const updateComments = async(updateData: Partial<PostComment>) => {
                 v-for="(one, idx) of item.files" 
                 :key="idx"
               >
-                <img v-if="one.type.startsWith('image/')" :src="one.url" alt="">
+                <img v-if="one.type.startsWith('image/')" :src="one.url" :alt="one.url">
                 <video 
                   v-else 
                   controls
@@ -245,7 +246,7 @@ const updateComments = async(updateData: Partial<PostComment>) => {
 }
 
 .van-list {
-  margin-top: 72px;
+  margin-top: 110px;
 }
 
 .van-cell {

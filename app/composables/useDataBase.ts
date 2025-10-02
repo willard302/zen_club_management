@@ -1,4 +1,4 @@
-import type { User, Post, PostComment } from "../types/database.types";
+import type { User, Post, PostComment, PostInsert } from "../types/database.types";
 export const useDataBase = () => {
   const client = useSupabaseClient();
   const authStore = useAuthStore();
@@ -47,7 +47,8 @@ export const useDataBase = () => {
   };
 
   const getPostComments = async(
-    postId: number): Promise<PostComment[]> => {
+    postId: number
+  ): Promise<PostComment[]> => {
       const {data, error} = await client
         .from("post_comments")
         .select("*")
@@ -55,6 +56,17 @@ export const useDataBase = () => {
 
       if(error) throw error;
       return data;
+  };
+
+  const insertPost = async(
+    postData: PostInsert
+  ) => {
+    const {data, error} = await (client as any)
+      .from('posts')
+      .insert(postData)
+
+    if (error) throw error;
+    return data;
   };
 
   const updatePost = async(
@@ -80,10 +92,11 @@ export const useDataBase = () => {
   }
 
   const deletePost = async(postId: number) => {
-    const response = await client
+    await client
       .from('posts')
       .delete()
       .eq('id', postId)
+      .select()
   }
 
   return {
@@ -92,6 +105,7 @@ export const useDataBase = () => {
     getPostComments,
     getPosts,
     updateUser,
+    insertPost,
     updatePost,
     updatePostComment,
     deletePost

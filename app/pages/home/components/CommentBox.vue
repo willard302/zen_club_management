@@ -28,8 +28,8 @@ const shareLists = reactive([
 ]);
 
 const onSelect = (option: any) => {
-  console.log(option)
-  // showToast(option.name)
+  console.log('onSelect: ', option)
+  showToast(option.name)
   showShare.value = false
 };
 
@@ -117,8 +117,8 @@ const sendComment = async() => {
         </van-cell-group>
       </div>
     </div>
-    <van-share-sheet 
-      v-model="showShare" 
+    <van-share-sheet
+      v-model:show="showShare" 
       title="分享給" 
       :options="shareLists" 
       @select="onSelect" 
