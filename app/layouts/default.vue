@@ -3,7 +3,9 @@
 <template>
   <div>
     <LayoutsHeader />
-      <slot />
+      <main>
+        <slot />
+      </main>
     <LayoutsFooter />
   </div>
 </template>
@@ -15,5 +17,8 @@ header {
   left: 0;
   width: 100%;
   z-index: 30000;
+}
+main {
+  margin-top: 46px;
 }
 </style>

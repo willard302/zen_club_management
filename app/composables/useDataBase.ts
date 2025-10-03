@@ -1,16 +1,20 @@
 import type { User, Post, PostComment, PostInsert } from "../types/database.types";
 export const useDataBase = () => {
   const client = useSupabaseClient();
-  const authStore = useAuthStore();
 
-  const getUser = async() => {
-    if(!authStore.userId) return {data: null, error: null};
-
-    return await client
+  const getUser = async<K extends keyof User>(
+    uuid: number | string,
+    attribute?: K
+  ): Promise<Pick<User, K> | User> => {
+    if(!uuid) throw "There is no uuid.";
+    const {data, error} = await client
       .from('users')
-      .select('*')
-      .eq('uuid', authStore.userId)
+      .select(attribute ? attribute : "*")
+      .eq('uuid', uuid)
       .single();
+
+    if (error) throw error;
+    return data;
   };
 
   const updateUser = async(

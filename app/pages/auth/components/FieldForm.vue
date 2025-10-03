@@ -10,7 +10,7 @@ const props = defineProps<{
   <van-form @submit="onSubmit">
     <van-cell-group inset>
       <van-field
-        v-for="(fieldItem, fieldIdx) in fieldItems"
+        v-for="(fieldItem, fieldIdx) in props.fieldItems"
         :key="fieldIdx"
         :type="fieldItem.type"
         v-model="fieldItem.value"
@@ -26,7 +26,7 @@ const props = defineProps<{
     </van-cell-group>
     <div class="button__menu">
       <van-button 
-        v-for="(btnItem, btnIdx) in buttonItems"
+        v-for="(btnItem, btnIdx) in props.buttonItems"
         :key="btnIdx"
         round block
         type="primary"
