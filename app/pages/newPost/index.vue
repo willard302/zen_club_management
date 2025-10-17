@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { UploaderFileListItem } from 'vant';
-import type { PostInsert } from '~/types/database.types';
+import type { PostInsert } from '~/types/supabase';
 
 const { uploadFile } = useStorage();
 const { dateToString } = useCommon();
@@ -10,14 +10,14 @@ const authStore = useAuthStore();
 const postFiles = ref<UploaderFileListItem[]>([]);
 const uploadFiles = ref<UploaderFileListItem[]>([]);
 const uploadInfo = ref<PostInsert>({
-  author: authStore.userInfo.name,
+  author: authStore.userInfo?.name,
   author_id: authStore.userId,
-  avatar_url: authStore.userInfo.avatar_url,
+  avatar_url: authStore.userInfo?.avatar_url,
   content: '',
   created_at: dateToString(new Date(Date.now())),
   files: [],
   accessible_id: [authStore.userId],
-  trackers_id: [authStore.userId]
+  trackers_id: []
 });
 
 const onAfterRead = async(
@@ -36,14 +36,14 @@ const onSubmit = async() => {
   try {
     const url = await uploadFile(uploadFiles.value, "icc_files");
     if (!url) throw "something error when uploading...";
-    uploadInfo.value.files = url.map(item => {
-      const ext = item.split(".").pop();
-      return {
-        type: `image/${ext}`,
-        url: item
-      };
-    });
-    await insertPost(uploadInfo.value);
+    // uploadInfo.value.files = url.map(item => {
+    //   const ext = item.split(".").pop();
+    //   return {
+    //     type: `image/${ext}`,
+    //     url: item
+    //   };
+    // });
+    // await insertPost(uploadInfo.value);
     showSuccessToast({message: "Post successfully."});
     setTimeout(() => navigateTo("/"), 2000);
   } catch (error) {
@@ -78,14 +78,14 @@ const resetFile = () => {
             </van-uploader>
           </template>
         </van-field>
-        <van-field
+        <!-- <van-field
           class="message__content"
           v-model="uploadInfo.content"
           rows="3"
           autosize
           type="textarea"
           placeholder="請輸入內容"
-        />
+        /> -->
       </van-cell-group>
       <van-space class="button__container">
         <van-button

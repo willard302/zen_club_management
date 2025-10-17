@@ -1,26 +1,26 @@
 <script setup lang="ts">
 import facebookIcon from "~/assets/images/facebook.gif";
 import instagramIcon from "~/assets/images/instagram.gif";
-import type { commentMessage, Post, PostComment } from "~/types/database.types";
+import type { PostComment, PostCommentInsert, PostCommentUpdate, PostUpdate } from "~/types/supabase";
 const { timeStampToString, dateToString } = useCommon();
 
 const props = defineProps<{
   postId: number
   content?: string
-  postFavorite?: Boolean,
-  comments?: PostComment
+  isFavorite?: Boolean,
+  comments?: PostComment[]
 }>();
 const emit = defineEmits<{
-  (e: 'updateFavorite', value: Partial<Post>): void,
-  (e: 'updateComments', value: Partial<PostComment>): void
+  (e: 'updateFavorite', value: PostUpdate): void,
+  (e: 'updateComments', value: PostCommentUpdate): void
 }>();
 
-const isFavorite = ref(props.postFavorite)
+const isFavorite = ref(props.isFavorite)
 const authStore = useAuthStore();
 const showShare = ref(false);
 const comments = ref(props.comments);
-const showComment = ref(0);
-const newComment = ref("");
+const showComment = ref("");
+const newCommentContent = ref("");
 const shareLists = reactive([
   { name: 'Facebook', icon: facebookIcon },
   { name: 'Instagram', icon: instagramIcon },
@@ -28,7 +28,6 @@ const shareLists = reactive([
 ]);
 
 const onSelect = (option: any) => {
-  console.log('onSelect: ', option)
   showToast(option.name)
   showShare.value = false
 };
@@ -42,14 +41,14 @@ const onClickIcon = async(key: string) => {
   switch (key) {
     case "favorite":
       isFavorite.value = !isFavorite.value;
-      emit("updateFavorite", {id: props.postId, favorite: isFavorite.value as boolean});      
+      emit("updateFavorite", {id: Number(props.postId), isFavorite: isFavorite.value as boolean});      
       break;
     case "comment":
-      if (showComment.value === props.postId) {
-        showComment.value = 0;
-      } else {
-        showComment.value = props.postId;
-      };
+      // if (showComment.value === props.postId) {
+      //   showComment.value = "";
+      // } else {
+      //   showComment.value = props.postId;
+      // };
       sendComment()
       break;
     case "share":
@@ -59,21 +58,19 @@ const onClickIcon = async(key: string) => {
 };
 
 const sendComment = async() => {
-  if(newComment.value.trim() === "") return;
+  if(newCommentContent.value.trim() === "") return;
 
-  const messages: (commentMessage[] | undefined) = comments.value?.messages;
-  if (messages === undefined) return;
-  const newMessage: commentMessage = {
+  const newComment: PostCommentInsert = {
+    post_id: props.postId,
     created_at: dateToString(new Date(Date.now())),
-    sender: authStore.userInfo.name ?? "",
-    sender_id: authStore.userId,
-    content: newComment.value
+    author: "",
+    author_id: authStore.userId,
+    content: newCommentContent.value
   };
-  const newMessages = [...messages, newMessage];
   
-  emit("updateComments", {id: props.postId, messages: newMessages});
+  emit("updateComments", newComment);
 
-  newComment.value = "";
+  newCommentContent.value = "";
 };
 </script>
 
@@ -93,20 +90,20 @@ const sendComment = async() => {
           collapse-text="收起" 
         />
       </div>
-      <div v-show="showComment === postId" class="activity__comment">
+      <div v-show="showComment === String(postId)" class="activity__comment">
         <van-divider>{{$t("comment")}}</van-divider>
         <ul class="comment__list">
-          <li v-for="(comment, idx) of comments?.messages" :key="idx">
+          <li v-for="(comment, idx) of comments" :key="idx">
             <span>{{ timeStampToString(comment.created_at) }}</span>
-            <span v-if="comment.sender">｜</span>
-            <span>{{ comment.sender }}</span>
+            <span v-if="comment.author">｜</span>
+            <span>{{ comment.author }}</span>
             <span v-if="comment.content">：</span>
             <span>{{ comment.content }}</span>
           </li>
         </ul>
         <van-cell-group class="comment__content" inset>
           <van-field 
-            v-model="newComment" 
+            v-model="newCommentContent" 
             autosize 
             type="textarea" 
             maxlength="200" 

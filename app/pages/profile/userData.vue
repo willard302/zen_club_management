@@ -2,10 +2,17 @@
 definePageMeta({ title: 'user_data' });
 import type { PickerConfirmEventParams } from 'vant';
 import globalCountry from '~/data/globalCountry';
+import type { cityType } from '~/types/data.types';
+import type { User, UserPrivate, UserUpdate } from '~/types/supabase';
 const authStore = useAuthStore();
 const router = useRouter();
-const { updateUser } = useDataBase();
+const { updateUser, getUserPrivate } = useDataBase();
 const { t } = useI18n();
+
+onMounted(async() => {
+  userInfo.value = authStore.userInfo as User;
+  userInfoPrivacy.value = await getUserPrivate(authStore.userId) as UserPrivate;
+})
 
 const isDisabled = ref(true);
 const showPickerGender = ref(false);
@@ -17,11 +24,30 @@ const searchCountry = ref("");
 const searchCity = ref("");
 const pickerDate = ref<string[]>([]);
 
+const userInfo = ref<User | UserUpdate>({
+  avatar_url: '',
+  created_at: '',
+  email: '',
+  gender: '',
+  id: '',
+  name: '',
+  numbers: null,
+  status: '',
+  username: '',
+});
+
+const userInfoPrivacy = ref<UserPrivate>({
+  birth: '',
+  birth_city: '',
+  birth_country: '',
+  created_at: '',
+  email: '',
+  id: '',
+  phone: '',
+});
+
 const countries = ref<typeof globalCountry>([]);
-interface cityType {
-  name: string;
-  geo: string
-}
+
 const city = ref<cityType[]>([]);
 const countryFieldName = {
   text: 'name',
@@ -36,15 +62,9 @@ const genderOptions = computed(() => {
   ]
 });
 
-const userHabits = computed({
-  get: () => authStore.userInfo.habits?.join(', ') || '',
-  set: (val: string) => {
-    authStore.userInfo.habits = val.split(',').map(s => s.trim())
-  }
-});
-
 const onSubmit = async () => {
-  await updateUser(authStore.userId, authStore.userInfo);
+  await updateUser(authStore.userId, userInfo.value);
+  authStore.setUserInfo(userInfo.value);
   showSuccessToast({
     message: 'saved success!',
     onClose: () => router.push("/profile")
@@ -75,12 +95,12 @@ const onConfirmGender = ({ selectedValues }: PickerConfirmEventParams) => {
 
 const onConfirmCountry = ({ selectedOptions }: PickerConfirmEventParams) => {
   showPickerCountry.value = false;
-  authStore.setUserInfo({'birth_country': `${selectedOptions[0]?.name ?? ''}, ${selectedOptions[1]?.name ?? ''}`})
+  userInfoPrivacy.value.birth_country = `${selectedOptions[0]?.name ?? ''}, ${selectedOptions[1]?.name ?? ''}`;
   searchCountry.value = '';
 };
 
 const onConfirmDate = ({ selectedValues }: any) => {
-  authStore.setUserInfo({'birth': selectedValues.join('-')})
+  userInfoPrivacy.value.birth = selectedValues.join('-');
   pickerDate.value = selectedValues;
   showPickerDate.value = false;
 };
@@ -108,14 +128,14 @@ const handleFilter = () => {
     <van-cell-group inset>
       <Avatar></Avatar>
       <van-field
-        v-model="authStore.userInfo.name"
+        v-model="userInfo.name"
         :label="$t('name')"
         :placeholder="$t('Hints.enter_name')"
       />
       <van-field
         is-link
         readonly
-        v-model="authStore.userInfo.gender"
+        v-model="userInfo.gender"
         :label="$t('gender')"
         :placeholder="$t('Hints.select_gender')"
         @click="handleToggle('gender')"
@@ -134,7 +154,7 @@ const handleFilter = () => {
       <van-field
         is-link
         readonly
-        v-model="authStore.userInfo.birth"
+        v-model="userInfoPrivacy.birth"
         :label="$t('birthdate')"
         :placeholder="$t('Hints.select_birthdate')"
         @click="handleToggle('date')"
@@ -151,15 +171,15 @@ const handleFilter = () => {
           @cancel="showPickerDate = false"
         />
       </van-popup>
-      <van-field
+      <!-- <van-field
         v-model="userHabits"
         :label="$t('habit')"
         :placeholder="$t('Hints.enter_habit')"
-      />
+      /> -->
       <van-field
         is-link
         readonly
-        v-model="authStore.userInfo.birth_country"
+        v-model="userInfoPrivacy.birth_country"
         :label="$t('country')"
         :placeholder="$t('Hints.select_country')"
         @click="showPickerCountry = true"

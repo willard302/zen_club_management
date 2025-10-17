@@ -1,17 +1,15 @@
 <script setup lang="ts">
 definePageMeta({
   title: 'register'
-})
-import FieldForm from "./components/FieldForm.vue"
-const username = ref('test002@gmail.com');
-const password = ref('123456');
-const password_confirm = ref('123456');
+});
+import type { account } from "~/types/auth.types";
+import FieldForm from "./components/FieldForm.vue";
 const router = useRouter();
 const { register } = useAuth();
-const fieldItems = reactive([
+const fieldItems: account[] = reactive([
   { 
     label: "username",
-    value: username.value, 
+    value: "test002@gmail.com", 
     name: "username", 
     type: "text",
     placeholder: "Hints.enter_mail",
@@ -20,7 +18,7 @@ const fieldItems = reactive([
   },
   {
     label: "password", 
-    value: password.value, 
+    value: "123456", 
     name: "password", 
     type: "password",
     placeholder: "Hints.enter_password",
@@ -30,7 +28,7 @@ const fieldItems = reactive([
   },
   {
     label: "password_confirm", 
-    value: password_confirm.value, 
+    value: "123456", 
     name: "password_confirm", 
     type: "password",
     placeholder: "Hints.enter_password",
@@ -45,17 +43,18 @@ const buttonItems = [
 ];
 
 const handleRegister = async() => {
-  if (password.value !== password_confirm.value) return showFailToast("password is different");
-
+  const username = fieldItems.find(item => item.name === "username")?.value;
+  const password = fieldItems.find(item => item.name === "password")?.value;
+  const password_confirm = fieldItems.find(item => item.name === "password_confirm")?.value;
+  if (password !== password_confirm) return showFailToast("password is different");
   showLoadingToast({
     message: "Loading...",
     forbidClick: true
   });
 
-  const { error } = await register(username.value, password.value);
+  const { error } = await register(username as string, password as string);
 
   if(error) {
-    console.error(error.message)
     showFailToast({
       message: error.message,
       forbidClick: true
@@ -67,14 +66,14 @@ const handleRegister = async() => {
     });
     router.push("/auth/login")
   }
-}
+};
 </script>
 
 <template>
   <FieldForm
     :fieldItems="fieldItems"
     :buttonItems="buttonItems"
-    :onSubmit="handleRegister"
+    @submit="handleRegister"
   ></FieldForm>
 </template>
 

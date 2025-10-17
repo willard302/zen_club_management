@@ -14,5 +14,9 @@
     {
       "path": "./.nuxt/tsconfig.node.json"
     }
+  ],
+  "include": [
+    "types/**/*.ts",
+    "types/**/*.d.ts"
   ]
 }

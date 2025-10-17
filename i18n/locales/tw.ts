@@ -108,6 +108,7 @@ export default {
   Hints:{
     enter_name: "請輸入您的姓名",
     enter_password: "請輸入您的密碼",
+    enter_phone: "請輸入您的電話",
     enter_comment: "請輸入留言",
     enter_current_password: "請輸入您現在的密碼",
     enter_mail: "請輸入您的信箱",
@@ -131,7 +132,7 @@ export default {
     marquee_text_3: '脈輪經絡運算'
   },
   horoscopes: '命盤',
-  iCloud_Chat: '雲端交友',
+  zen_club: '禪學社',
   import_account: '匯入帳號',
   import_name: '匯入姓名',
   individual_music_therapy: '個別音樂療法',
@@ -235,6 +236,7 @@ export default {
   music_therapy: '音樂療法',
   my_collection: '我的收藏',
   my_favorite: '我的最愛',
+  my_friends: '我的好友',
   name: '姓名',
   new_friend: '新朋友',
   new_password: '新密碼',

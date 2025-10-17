@@ -1,83 +1,177 @@
-import type { User, Post, PostComment, PostInsert } from "../types/database.types";
+import type { Database } from "~/types/database.types";
+import type { UserInsert, PostInsert, UserUpdate, PostUpdate, PostCommentUpdate, User, UserPrivate } from "../types/supabase";
+
 export const useDataBase = () => {
-  const client = useSupabaseClient();
+  const client = useSupabaseClient<Database>();
 
   const getUser = async<K extends keyof User>(
-    uuid: number | string,
+    userId: string,
     attribute?: K
-  ): Promise<Pick<User, K> | User> => {
-    if(!uuid) throw "There is no uuid.";
+  ) => {
+
     const {data, error} = await client
       .from('users')
       .select(attribute ? attribute : "*")
-      .eq('uuid', uuid)
-      .single();
+      .eq('id', String(userId))
+      .maybeSingle();
 
-    if (error) throw error;
+    if (error) throw new Error(`Error fetching user: ${error}`);
+
+    if (!data) throw new Error("No User found.");
+
     return data;
   };
 
-  const updateUser = async(
-    userId: string, 
-    updateData: Partial<User>
+  const getUserPrivate = async<K extends keyof UserPrivate>(
+    userId: string,
+    attribute?: K
   ) => {
-    return await (client as any)
-      .from('users')
-      .update(updateData)
-      .eq('uuid', userId)
-      .select()
+    const { data, error } = await client
+      .from('user_private')
+      .select(attribute ? attribute : "*")
+      .eq('id', userId)
+      .maybeSingle()
+    
+    if (error) throw new Error(`Error fetching user: ${error}`);
+
+    if (!data) throw new Error(`No user found.`);
+
+    return data;
   };
 
-  const getPost = async<K extends keyof Post>(
+
+  const getUsers = async() => {
+    const { data, error } = await client
+      .from('users')
+      .select()
+    if (error) throw new Error(`Error fetching users: ${error}`);
+
+    if (!data) throw new Error(`No user found.`);
+
+    return data;
+  };
+
+  const getPost = async(
     docId: number, 
-    attribute?: K
-  ): Promise<Pick<Post, K> | Post> => {
+    attribute?: string
+  ) => {
     const {data, error} = await client
       .from("posts")
       .select(attribute ? attribute : "*")
       .eq("id", docId)
       .single();
 
-    if (error) throw error;
+    if (error) throw new Error(`Error fetching posts: ${error}`);
+
+    if (!data) throw `No posts found.`;
+
     return data;
   };
 
-  const getPosts = async(userId?: number) => {
-    let query = client.from("posts").select("*");
+  const getPostTrackers = async(
+    docId: number
+  ) => {
+    const {data, error} = await client
+      .from("posts")
+      .select("trackers_id")
+      .eq("id", docId)
+      .single()
 
-    if (userId) query.eq('id', userId);
+    if (error) throw new Error(`Error fetching trackers: ${error}`);
 
-    return await query;
+    if (!data) throw new Error(`No trackers found.`);
+
+    return data;
+  }
+
+  const getPosts = async() => {
+    const {data, error} = await client
+      .from("posts")
+      .select("*")
+      .order('created_at', {ascending: false});
+
+    if (error) throw new Error(`Error fetching posts: ${error}`);
+
+    if (!data) throw new Error(`No posts found.`);
+
+    return data;
   };
+
+  const getFriends = async(
+    userId: string
+  ) => {
+    const {data, error} = await client
+      .from("friends")
+      .select("*")
+      .eq('user_id', String(userId));
+    
+    if(error) throw new Error(`Error fetching friends: ${error}`);
+
+    if(!data) throw new Error(`No friends found.`);
+
+    return data;
+  }
 
   const getPostComments = async(
     postId: number
-  ): Promise<PostComment[]> => {
-      const {data, error} = await client
-        .from("post_comments")
-        .select("*")
-        .eq('id', postId)
+  ) => {
+    const {data, error} = await client
+      .from("post_comments")
+      .select("*")
+      .eq('id', postId)
+      .order('created_at', {ascending: false});
 
-      if(error) throw error;
-      return data;
+    if(error) throw new Error(`Error fetching comments: ${error}`);
+
+    if(!data) throw new Error(`No comments found.`);
+    
+    return data;
+  };
+
+  const insertUser = async(
+    userData: UserInsert
+  ) => {
+    const {data, error} = await client
+      .from('users')
+      .insert(userData);
+
+    if (error) throw new Error(`Error posting user: ${error}`);
+
+    if (!data) throw new Error(`No user insert.`);
+
+    return data;
   };
 
   const insertPost = async(
     postData: PostInsert
   ) => {
-    const {data, error} = await (client as any)
+    const {data, error} = await client
       .from('posts')
       .insert(postData)
 
-    if (error) throw error;
+    if (error) throw new Error(`Error posting post. ${error} `) ;
+
+    if (!data) throw new Error(`No post insert`)
+
     return data;
+  };
+
+  const updateUser = async(
+    userId: string, 
+    updateData: UserUpdate
+  ) => {
+    return await client
+      .from('users')
+      .update(updateData)
+      .eq('uuid', userId)
+      .select()
   };
 
   const updatePost = async(
     postId: number, 
-    updateData: Partial<Post>
+    updateData: PostUpdate
   ) => {
-    return await (client as any)
+    return await client
       .from('posts')
       .update(updateData)
       .eq('id', postId)
@@ -86,16 +180,18 @@ export const useDataBase = () => {
 
   const updatePostComment = async(
     postId: number,
-    updateData: PostComment
+    updateData: PostCommentUpdate
   ) => {
-    return await (client as any)
+    return await client
       .from("post_comments")
       .update(updateData)
       .eq('id', postId)
       .select()
   }
 
-  const deletePost = async(postId: number) => {
+  const deletePost = async(
+    postId: number
+  ) => {
     await client
       .from('posts')
       .delete()
@@ -105,10 +201,15 @@ export const useDataBase = () => {
 
   return {
     getUser,
+    getUserPrivate,
+    getUsers,
+    getFriends,
     getPost,
+    getPostTrackers,
     getPostComments,
     getPosts,
     updateUser,
+    insertUser,
     insertPost,
     updatePost,
     updatePostComment,

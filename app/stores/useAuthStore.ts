@@ -1,13 +1,18 @@
 import { defineStore } from 'pinia';
-import type { UserUpdate } from '~/types/database.types';
+import type { AuthState } from '~/types/auth.types';
+import type { UserUpdate } from '~/types/supabase';
 
 export const useAuthStore = defineStore('auth', {
-  state: () => ({
-    isAuthenticated: false as boolean,
-    userId: ' ' as string,
-    userInfo: {} as UserUpdate,
-    tabBarActive: 'home'
+  state: (): AuthState => ({
+    isAuthenticated: false,
+    userId: "0",
+    userInfo: null,
+    tabBarActive: 'home',
+    defaultAvatar: 'https://vvbtzvedcvhxibozbryz.supabase.co/storage/v1/object/public/icc_avatar/default_avatar.png'
   }),
+  getters: {
+    avatarUrl: (state) => state.userInfo?.avatar_url ?? state.defaultAvatar
+  },
   actions: {
     setAuthenticated(value: boolean) {
       this.isAuthenticated = value;
@@ -23,7 +28,7 @@ export const useAuthStore = defineStore('auth', {
     },
     initAuth() {
       this.isAuthenticated = false;
-      this.userId = '';
+      this.userId = "0";
       this.userInfo = {};
     }
   },

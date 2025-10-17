@@ -1,115 +1,375 @@
-interface message {
-  created_at: string;
-  content: string;
-  read_at: string;
-  sender: string;
-  status: string;
-}
+import type { ChatMember, File, Numbers } from "./data.types"
 
-interface file {
-  type: string;
-  url: string;
-}
-
-interface numbersResult {
-  birth: number;
-  birthDay: string;
-  destiny: number;
-  empty: number[];
-  nature: number[];
-  sign: number;
-  spirit: number;
-  talent: number[];
-}
-
-interface numbers {
-  moon: numbersResult;
-  sun: numbersResult;
-}
-
-export type commentMessage = {
-  created_at: string,
-  sender: string,
-  sender_id: string,
-  content: string
-}
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "13.0.4"
+  }
   public: {
     Tables: {
       chats: {
         Row: {
-          created_at: string;
-          id: number;
-          lastMessageContent?: string | null;
-          lastMessageDate?: string | null;
-          members?: string[] | null;
-          messages?: message[] | null;
-        },
-        Insert: Partial<Database['public']['Tables']['chats']['Row']>,
-        Update: Partial<Database['public']['Tables']['chats']['Row']>,
-        Relationships: []
-      };
-      posts: {
-        Row: {
-          author?: string;
-          author_id?: string;
-          avatar_url?: string;
-          content?: string;
-          created_at?: string;
-          favorite?: boolean;
-          trackers_id?: string[];
-          files?: file[];
-          id: number;
-          accessible_id?: string[];
-          comments?: PostComment[]
+          created_at: string
+          id: number
+          lastMessageContent: string
+          lastMessageDate: string
+          members: ChatMember[]
         }
-        Insert: Partial<Database["public"]["Tables"]["posts"]["Row"]>
-        Update: Partial<Database["public"]["Tables"]["posts"]["Row"]>
-        Relationships?: [];
-      };
+        Insert: {
+          created_at?: string
+          id?: number
+          lastMessageContent?: string
+          lastMessageDate?: string
+          members: ChatMember[]
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          lastMessageContent?: string
+          lastMessageDate?: string
+          members?: ChatMember[]
+        }
+        Relationships: []
+      }
+      friends: {
+        Row: {
+          created_at: string
+          friend_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          friend_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          friend_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "friends_friend_id_fkey"
+            columns: ["friend_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "friends_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       post_comments: {
         Row: {
-          id: number;
-          messages?: commentMessage[]
+          author: string
+          author_id: string
+          content: string
+          created_at: string
+          id: number
+          post_id: number
+          updated_at: string
         }
-        Insert: Partial<Database["public"]["Tables"]["post_comments"]["Row"]>
-        Update: Partial<Database["public"]["Tables"]["post_comments"]["Row"]>
-        Relationships?: [];
-      };
+        Insert: {
+          author: string
+          author_id: string
+          content?: string
+          created_at?: string
+          id?: number
+          post_id: number
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: number
+          post_id?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_post"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_comments_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          accessible_id: string[]
+          author: string
+          author_id: string
+          avatar_url: string
+          content: string
+          created_at: string
+          files: File[]
+          id: number
+          trackers_id: string[]
+        }
+        Insert: {
+          accessible_id: string[]
+          author?: string
+          author_id: string
+          avatar_url?: string
+          content?: string
+          created_at?: string
+          files: File[]
+          id?: number
+          trackers_id: string[]
+        }
+        Update: {
+          accessible_id?: string[]
+          author?: string
+          author_id?: string
+          avatar_url?: string
+          content?: string
+          created_at?: string
+          files?: File[]
+          id?: number
+          trackers_id?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_private: {
+        Row: {
+          birth: string
+          birth_city: string
+          birth_country: string
+          created_at: string
+          email: string
+          id: string
+          phone: string
+        }
+        Insert: {
+          birth?: string
+          birth_city?: string
+          birth_country?: string
+          created_at: string
+          email?: string
+          id?: string
+          phone?: string
+        }
+        Update: {
+          birth?: string
+          birth_city?: string
+          birth_country?: string
+          created_at?: string
+          email?: string
+          id?: string
+          phone?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
-          name?: string;
-          email?: string | null;
-          avatar_url?: string;
-          birth?: string | number;
-          birth_city?: string | null;
-          birth_country?: string;
-          created_at?: string | null;
-          gender?: string;
-          no?: number;
-          username?: string | null;
-          uuid?: string | null;
-          habits?: string[] | null;
-          numbers?: numbers | null;
-          status?: string | null;
+          avatar_url: string
+          created_at: string
+          email: string
+          gender: string
+          id: string
+          name: string
+          numbers: Numbers[] | null
+          status: string
+          username: string
         }
-        Update: Partial<Database["public"]["Tables"]["users"]["Row"]>
-        Insert: Partial<Database["public"]["Tables"]["users"]["Row"]>
-        Relationships?: [];
-      };
-    };
-  };
-};
+        Insert: {
+          avatar_url: string
+          created_at?: string
+          email: string
+          gender?: string
+          id: string
+          name?: string
+          numbers?: Numbers[] | null
+          status?: string
+          username: string
+        }
+        Update: {
+          avatar_url?: string
+          created_at?: string
+          email?: string
+          gender?: string
+          id?: string
+          name?: string
+          numbers?: Numbers[] | null
+          status?: string
+          username?: string
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
 
-export type Post = Database['public']['Tables']['posts']['Row'];
-export type PostInsert = Database['public']['Tables']['posts']['Insert'];
-export type PostUpdate = Database['public']['Tables']['posts']['Update'];
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-export type PostComment = Database['public']['Tables']['post_comments']['Row'];
-export type PostCommentInsert = Database['public']['Tables']['post_comments']['Insert'];
-export type PostCommentUpdate = Database['public']['Tables']['post_comments']['Update'];
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
-export type User = Database['public']['Tables']['users']['Row'];
-export type UserInsert = Database['public']['Tables']['users']['Insert'];
-export type UserUpdate = Database['public']['Tables']['users']['Update'];
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const

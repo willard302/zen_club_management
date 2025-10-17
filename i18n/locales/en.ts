@@ -107,6 +107,7 @@ export default {
   Hints:{
     enter_name: "Please enter your name",
     enter_password: "Please input your password",
+    enter_phone: "Please input your phone-number.",
     enter_comment: "Please input your comment.",
     enter_current_password: "Please input your current password.",
     enter_mail: "Please input your email.",
@@ -130,7 +131,7 @@ export default {
     marquee_text_3: 'Chakra Meridian Computing'
   },
   horoscopes: 'horoscopes',
-  iCloud_Chat: 'iCloud Chat',
+  zen_club: 'Zen Club',
   import_account: 'Import Account',
   import_name: 'Import Name',
   individual_music_therapy: 'Individual music therapy',
@@ -235,6 +236,7 @@ export default {
   music_therapy: 'Music Therapy',
   my_collection: 'My Collection',
   my_favorite: 'My Favorite',
+  my_friends: 'My Friends',
   name: 'Name',
   new_friend: 'New Friend',
   new_password: 'New Password',

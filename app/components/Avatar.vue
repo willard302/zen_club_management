@@ -1,27 +1,33 @@
 <script setup lang="ts">
 import type{ UploaderFileListItem } from 'vant';
-const { uploadFile } = useStorage();
-const { updateUser } = useDataBase();
+const { uploadFile, deleteFile } = useStorage();
+const { updateUser, getUser } = useDataBase();
 const authStore = useAuthStore();
 
 const avatar_url = ref<UploaderFileListItem[]>([
-  { url: authStore.userInfo.avatar_url }
+  { url: authStore.avatarUrl }
 ]);
 
 const onAfterRead = async (
   fileItem: UploaderFileListItem | UploaderFileListItem[]
 ) => {
+  const oldUrl = (await getUser(authStore.userId, 'avatar_url')).avatar_url;
   const file = fileItem as UploaderFileListItem;
   if (!file || !file.file) return;
 
-  const url = await uploadFile(file, "icc_avatar");
-  if (!url) throw "There is no url.";
-
-  avatar_url.value = [{ url: url[0] }];
-  const {data, error} = await updateUser(authStore.userId, {avatar_url: url[0]});
+  const newUrl = await uploadFile(file, "icc_avatar");
+  if (!newUrl) throw "There is no url.";
+  
+  avatar_url.value = [{ url: newUrl[0] }];
+  const {data, error} = await updateUser(authStore.userId, {avatar_url: newUrl[0]});
   if (error) throw error;
-  if (!data) throw `there is no data`
-  authStore.userInfo = {...authStore.userInfo, avatar_url: url[0]};
+  if (!data) throw `there is no data`;
+  if (authStore.userInfo) {
+    Object.assign(authStore.userInfo, {avatar_url: newUrl[0]})
+  };
+
+  if (!oldUrl) throw "There is no oldUrl.";
+  await deleteFile([oldUrl], 'icc_avatar');
 };
 
 </script>

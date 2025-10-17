@@ -38,7 +38,21 @@ export const useStorage = () => {
     return results.filter(url => url !== "");
   };
 
+  const deleteFile = async(
+    files: string[],
+    bucketName: string
+  ) => {
+    const filesToDelete = files.map(file => decodeURIComponent(file.split('/').pop() as string));
+    const { data, error } = await client
+      .storage
+      .from(bucketName)
+      .remove(filesToDelete);
+    if (error) throw `Delete error: ${error.message}`;
+    console.log(`Deleted files: `, data);
+  }
+
   return {
-    uploadFile
+    uploadFile,
+    deleteFile
   }
 }

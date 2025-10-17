@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const route = useRoute();
 const title = computed<string>(() => {
-  return route.meta.title ? route.meta.title : 'iCloud_Chat';
+  return route.meta.title ? route.meta.title : 'zen_club';
 });
 const routeBack = () => {
   history.go(-1);

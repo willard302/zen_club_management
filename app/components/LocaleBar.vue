@@ -17,7 +17,6 @@ const messages: message[] = [
 const currentLocale = ref("tw");
 
 watch(currentLocale, (newLocale) => {
-  console.log(newLocale)
   switch(newLocale) {
     case 'tw':
       setLocale('tw');

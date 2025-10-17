@@ -1,17 +1,16 @@
 <script setup lang="ts">
-definePageMeta({
-  title: 'login'
-});
+definePageMeta({title: 'login'});
+import type { account } from '~/types/auth.types';
 import FieldForm from './components/FieldForm.vue';
 const { login } = useAuth();
+const { getUser } = useDataBase();
 const router = useRouter();
-const username = ref('test001@gmail.com');
-const password = ref('123456');
+const authStore = useAuthStore();
 
-const fieldItems = reactive([
+const fieldItems: account[] = reactive([
   { 
     label: "username",
-    value: username.value, 
+    value: 'test001@gmail.com', 
     name: "username", 
     type: "text",
     placeholder: "Hints.enter_mail",
@@ -20,7 +19,7 @@ const fieldItems = reactive([
   },
   {
     label: "password", 
-    value: password.value, 
+    value: '123456', 
     name: "password", 
     type: "password",
     placeholder: "Hints.enter_password",
@@ -30,20 +29,28 @@ const fieldItems = reactive([
   }
 ]);
 
-const handleLogin = async() => {
+const handleLogin = async(account: account[]) => {
   showLoadingToast({
     message: "Loading...",
     forbidClick: true
   });
 
-  const { data, error } = await login(username.value, password.value);
+  const username = account.find(item => item.name === 'username')?.value
+  const password = account.find(item => item.name === 'password')?.value
 
-  if(error) {
-    showFailToast({
-      message: error.message,
-      forbidClick: true
-    })
-  } else {
+  const response = await login(username as string, password as string);
+
+  if (!response.user || !response.user.id) throw new Error("Login failed");
+
+  authStore.setAuthenticated(!!response.user.id);
+  authStore.setUserId(response.user.id);
+
+  const user = await getUser(response.user.id);
+  authStore.setUserInfo(user);
+  
+  if (user === null) {
+    throw new Error(`the user is null.`)
+  } else{
     showSuccessToast({
       message: "login successfully",
       forbidClick: true
@@ -63,8 +70,8 @@ const buttonItems = [
 <template>
   <FieldForm 
     :field-items="fieldItems"
-    :onSubmit="handleLogin"
     :buttonItems="buttonItems"
+    @submit="handleLogin"
   />
 </template>
 

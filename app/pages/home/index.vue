@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useCommon } from "~/composables/useCommon";
-import type { commentMessage, Post, PostComment } from "~/types/database.types";
-import CommentBox from "./components/CommentBox.vue";
+
+import CommentBox from "./components/CommentBar.vue";
+import type { Post, PostCommentUpdate, PostInsert, PostUpdate } from "~/types/supabase";
 const authStore = useAuthStore();
 const router = useRouter();
-const { getPost, getPostComments, getPosts, updatePost, updatePostComment, deletePost } = useDataBase();
+const { getPost, getPostComments, getPosts, getPostTrackers, updatePost, updatePostComment, deletePost } = useDataBase();
+const { deleteFile } = useStorage();
 const { timeStampToString } = useCommon();
 
 const isLoading = ref(false);
@@ -12,7 +14,7 @@ const isFinished = ref(false);
 const showFavorite = ref(false);
 const showOptions = ref(false);
 const subNavs = ref<Post | null>(null);
-const list = ref<Post[]>([]);
+const lists = ref<Post[]>([]);
 const currentClass = ref("all");
 const optionLists = [
   { name: 'delete' }
@@ -47,28 +49,29 @@ const loadPosts = async() => {
 
     if (!authStore.userId) return;
 
-    const {data: posts, error} = await getPosts();
-    if (error) {
-      console.error("Failed to fetch posts: ", error);
-      return;
-    } 
+    const posts = await getPosts();
+
     if(!posts || posts.length === 0) {
       isFinished.value = true;
       return;
     };
 
-    list.value = await Promise.all(
-      posts.map(async (item: Post) => {
-        const comments = await getPostComments(item.id);
-        return {
-          ...item,
-          comments: comments,
-          favorite: item.trackers_id
-            ? item.trackers_id.includes(authStore.userId)
-            : false,
-        }
-      })
-    );
+    console.log(posts)
+
+    const newPosts = await Promise.all(posts.map(async(post) => {
+      return {
+        ...post,
+        accessible_id: post.accessible_id ?? [],
+        author: post.author ?? "",
+        author_id: post.author_id ?? "",
+        avatar_url: post.avatar_url ?? "",
+        comments: await getPostComments(post.id),
+        isFavorite: post.trackers_id?.includes(authStore.userId) ?? false
+      }
+    }));
+
+    lists.value = newPosts;
+
     isFinished.value = true;
   } catch (error) {
     console.error("Failed to load posts: ", error);
@@ -90,8 +93,11 @@ const onClickAction = async(option: option) => {
   switch(option.name) {
     case "delete":
       if(subNavs.value && typeof subNavs.value.id === 'number') {
-        await deletePost(subNavs.value.id);
-        await getPosts()
+        const files = (await getPost(subNavs.value.id, 'files'));
+        console.log('files to delete: ', files);
+        // await deleteFile(files, 'icc_files');
+        // await deletePost(subNavs.value.id);
+        // await getPosts()
         showSuccessToast({message: "delete successfully."})
       }
       showOptions.value = false;
@@ -102,26 +108,33 @@ const onClickAction = async(option: option) => {
   subNavs.value = null;
 };
 
-const updateFavorite = async(updateData: Partial<Post>) => {
-  const trackers = (await getPost(updateData.id as number, 'trackers_id')).trackers_id as string[]
+const updateFavorite = async(updateData: PostUpdate) => {
+  const id = Number(updateData.id);
+  const trackers = (await getPostTrackers(id)).trackers_id;
+  if (!trackers) return;
   const trackerExist = trackers.includes(authStore.userId);
   let newTrackers: string[];
+  console.log(trackerExist)
   if (trackerExist) {
     newTrackers = trackers.filter(id => id !== authStore.userId);
   } else {
-    newTrackers = [...trackers, authStore.userId]
+    newTrackers = [...trackers, authStore.userId];
+    console.log(trackers, authStore.userId)
   };
-  await updatePost(updateData.id as number, {"trackers_id": newTrackers});
+  console.log(newTrackers)
+  const result = await updatePost(id, {"trackers_id": newTrackers});
+  console.log(result)
   
   showSuccessToast({
     message: 'success'
   });
 };
 
-const updateComments = async(updateData: Partial<PostComment>) => {
-  await updatePostComment(updateData.id as number, updateData as PostComment);
+const updateComments = async(updateData: PostCommentUpdate) => {
+  if (!updateData.id) return;
+  await updatePostComment(updateData.id, updateData);
   setTimeout(async() => await getPostComments(updateData.id as number), 1000);
-}
+};
 
 </script>
 
@@ -147,24 +160,24 @@ const updateComments = async(updateData: Partial<PostComment>) => {
       finished-text="no more data"
       @load="onLoad"
     >
-      <van-cell v-for="(item, idx) in list" :key="idx">
-        <div v-show="showFavorite ? item.favorite : true" class="activity__container">
+      <van-cell v-for="(list, idx) in lists" :key="idx">
+        <div v-show="showFavorite ? list.isFavorite : true" class="activity__container">
           <div class="activity__avatar">
             <div class="avatar__info">
-              <van-image round :src="item.avatar_url" />
-              <span class="activity__author">{{ item.author }}</span>
-              <span>{{ timeStampToString(item.created_at) }}</span>
+              <van-image round :src="list.avatar_url || '' " />
+              <span class="activity__author">{{ list.author }}</span>
+              <span>{{ timeStampToString(list.created_at) }}</span>
             </div>
-            <template v-if="item.author_id === authStore.userId">
-              <van-button class="avatar__menu" @click="handleOpenSubNavs(item)">
+            <!-- <template v-if="list.author_id === authStore.userId">
+              <van-button class="avatar__menu" @click="handleOpenSubNavs(list)">
                 <font-awesome :icon="['fas', 'ellipsis-vertical']" />
               </van-button>
-            </template>
+            </template> -->
           </div>
-          <div v-if="item.files" class="activity__media full-screen-x">
-            <van-swipe :id="item.id">
+          <div v-if="list.files" class="activity__media full-screen-x">
+            <van-swipe :id="list.id">
               <van-swipe-item 
-                v-for="(one, idx) of item.files" 
+                v-for="(one, idx) of list.files" 
                 :key="idx"
               >
                 <img v-if="one.type.startsWith('image/')" :src="one.url" :alt="one.url">
@@ -180,10 +193,10 @@ const updateComments = async(updateData: Partial<PostComment>) => {
             </van-swipe>
           </div>
           <CommentBox
-            :post-id="item.id"
-            :content="item.content" 
-            :is-favorite="item.favorite"
-            :comments="item.comments ? item.comments[0] : undefined"
+            :post-id="list.id"
+            :content="list.content || ''" 
+            :is-favorite="list.isFavorite as boolean"
+            :comments="list.comments ? list.comments : []"
             @update-favorite="updateFavorite"
             @update-comments="updateComments"
           />

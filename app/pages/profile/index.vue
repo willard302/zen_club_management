@@ -6,13 +6,13 @@ const router = useRouter();
 const { logout } = useAuth();
 const { updateUser } = useDataBase();
 const isEdit = ref(false);
-const userStatus = ref("");
 const lists = reactive([
-  { title: 'user_data', path: '/profile/userData' }
+  { title: 'user_data', path: '/profile/userData' },
+  { title: 'my_friends', path: '/contact/friends' }
 ]);
-const handleToggleState = () => {
+const handleToggleState = async() => {
   if (isEdit.value) {
-    updateUser(authStore.userId, { 'status': userStatus.value });
+    await updateUser(authStore.userId, { 'status': '123' });
   }
   isEdit.value = !isEdit.value;
 };
@@ -34,11 +34,11 @@ const handleLogout = async () => {
     <Avatar></Avatar>
     <van-cell-group class="profile__header">
       <div class="profile__heading">
-        <div class="name">{{ authStore.userInfo?.name }}</div>
+        <div class="name">{{ authStore.userInfo!.name }}</div>
       </div>
       <div class="profile__heading">
         <div class="status">
-          <input type="textarea" v-model="authStore.userInfo.status" :disabled="!isEdit">
+          <input type="textarea" v-model="authStore.userInfo!.status" :disabled="!isEdit">
           <van-button v-if="!isEdit" @click="handleToggleState()">
             <client-only>
               <font-awesome :icon="['fas', 'pen']" />
