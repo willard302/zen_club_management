@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import type { account } from '~/types/auth.types';
+import type { ButtonItem, FieldItem } from '~/types/data.types';
+
 const props = defineProps<{
-  fieldItems: account[],
-  buttonItems: any[]
+  fieldItems: FieldItem[],
+  buttonItems?: ButtonItem[]
 }>();
 
-const emit = defineEmits<{
-  (e: 'submit', ...args: any[]): void
-}>();
+const emit = defineEmits(['submit']);
 
 const fields = ref(props.fieldItems);
 
@@ -20,21 +19,21 @@ const onSubmit = () => {
   <van-form @submit="onSubmit">
     <van-cell-group inset>
       <van-field
-        v-for="(fieldItem, fieldIdx) in fields"
+        v-for="(field, fieldIdx) in fields"
         :key="fieldIdx"
-        :type="fieldItem.type"
-        v-model="fieldItem.value"
-        :name="fieldItem.name"
-        :label="$t(fieldItem.label)"
-        :placeholder="$t(fieldItem.placeholder)"
+        :type="field.type"
+        v-model="field.value"
+        :name="field.name"
+        :label="$t(field.label)"
+        :placeholder="$t(field.placeholder ?? '')"
         :rules="[{
-          required: fieldItem.required,
-          message: $t(fieldItem.message)
+          required: field.required,
+          message: $t(field.message ?? '')
         }]"
-        :input-attrs="{ autocomplete: fieldItem.autocomplete }"
+        :input-attrs="{ autocomplete: field.autocomplete }"
       />
     </van-cell-group>
-    <div class="button__menu">
+    <div v-if="props.buttonItems" class="button__menu">
       <van-button 
         v-for="(btnItem, btnIdx) in props.buttonItems"
         :key="btnIdx"

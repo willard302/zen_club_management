@@ -1,13 +1,12 @@
 <script setup lang="ts">
 definePageMeta({title: 'login'});
-import type { account } from '~/types/auth.types';
-import FieldForm from './components/FieldForm.vue';
+import type { ButtonItem, FieldItem } from '~/types/data.types';
 const { login } = useAuth();
 const { getUser } = useDataBase();
 const router = useRouter();
-const authStore = useAuthStore();
+const mainStore = useMainStore();
 
-const fieldItems: account[] = reactive([
+const fieldItems: FieldItem[] = reactive([
   { 
     label: "username",
     value: 'test001@gmail.com', 
@@ -29,24 +28,28 @@ const fieldItems: account[] = reactive([
   }
 ]);
 
-const handleLogin = async(account: account[]) => {
+const handleLogin = async(account: FieldItem[]) => {
   showLoadingToast({
     message: "Loading...",
     forbidClick: true
   });
 
-  const username = account.find(item => item.name === 'username')?.value
-  const password = account.find(item => item.name === 'password')?.value
+  const username = account.find(item => item.name === 'username')?.value;
+  const password = account.find(item => item.name === 'password')?.value;
 
-  const response = await login(username as string, password as string);
+  if (!username || !password) throw new Error("There is no username or password.");
+
+  const response = await login(username, password);
 
   if (!response.user || !response.user.id) throw new Error("Login failed");
 
-  authStore.setAuthenticated(!!response.user.id);
-  authStore.setUserId(response.user.id);
+  const user_id = response.user.id;
 
-  const user = await getUser(response.user.id);
-  authStore.setUserInfo(user);
+  mainStore.setAuthenticated(!!user_id);
+  mainStore.setUser({id: user_id});
+
+  const user = await getUser(user_id);
+  mainStore.setUser(user);
   
   if (user === null) {
     throw new Error(`the user is null.`)
@@ -61,15 +64,15 @@ const handleLogin = async(account: account[]) => {
   }
 };
 
-const buttonItems = [
-  { text: "submit", type: "submit", to: null },
+const buttonItems: ButtonItem[] = [
+  { text: "submit", type: "submit", to: "" },
   { text: "register", type: "button", to: "/auth/register" }
 ];
 </script>
 
 <template>
   <FieldForm 
-    :field-items="fieldItems"
+    :fieldItems="fieldItems"
     :buttonItems="buttonItems"
     @submit="handleLogin"
   />

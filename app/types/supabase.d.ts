@@ -1,29 +1,30 @@
-import type { Database } from "./database.types";
+import type { Database, Constants } from "./database.types";
 
 declare module '#supabase/schema' {
-  interface DatabaseDefinition extends Database {};
+    interface DatabaseDefinition extends Database {};
 };
 
-export type User = Database['public']['Tables']['users']['Row'];
-export type UserInsert = Database['public']['Tables']['users']['Insert'];
-export type UserUpdate = Database['public']['Tables']['users']['Update'];
-export type UserPrivate = Database['public']['Tables']['user_private']['Row'];
-export type UserPrivateInsert = Database['public']['Tables']['user_private']['Insert'];
-export type UserPrivateUpdate = Database['public']['Tables']['user_private']['Update'];
-export type Post = Database['public']['Tables']['posts']['Row'] & {
-  comments?: PostComment[];
-  isFavorite?: Boolean
-};
-export type PostInsert = Database['public']['Tables']['posts']['Insert'] & {
-  comments?: PostComment[];
-  isFavorite?: Boolean
-};
-export type PostUpdate = Database['public']['Tables']['posts']['Update'] & {
-  comments?: PostComment[];
-  isFavorite?: Boolean
-};
-export type PostComment = Database['public']['Tables']['post_comments']['Row'];
-export type PostCommentInsert = Database['public']['Tables']['post_comments']['Insert'];
-export type PostCommentUpdate = Database['public']['Tables']['post_comments']['Update'];
-export type Friend = Database['public']['Tables']['friends']['Row'];
-export type FriendInsert = Database['public']['Tables']['friends']['Insert'];
+type User = Database['public']['Tables']['users'];
+export type UserRow = User['Row'];
+export type UserInsert = User['Insert'];
+export type UserUpdate = User['Update'];
+
+type Profiles = Database['public']['Tables']['profiles'];
+export type ProfilesRow = Profiles['Row'];
+export type ProfilesInsert = Profiles['Insert'];
+export type ProfilesUpdate = Profiles['Update'];
+
+type Clubs = Database['public']['Tables']['clubs'];
+export type ClubsRow = Clubs['Row'];
+export type ClubsInsert = Clubs['Insert'];
+export type ClubsUpdate = Clubs['Update'];
+
+type Memebers = Database['public']['Tables']['members'];
+export type MemebersRow = Memebers['Row'];
+export type MemebersInsert = Memebers['Insert'];
+export type MemebersUpdate = Memebers['Row'];
+
+type Enums = Constants['public']['Enums']
+export type Role = Enums['club_role'];
+export type Attendance = Enums['attendance_status'];
+export type StudentYear = Enums['student_year'];

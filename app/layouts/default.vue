@@ -1,15 +1,12 @@
-<script setup lang="ts"></script>
-
 <template>
   <div>
-    <LayoutsHeader />
-      <main>
-        <slot />
-      </main>
-    <LayoutsFooter />
+    <LayoutHeader />
+    <main>
+      <slot />
+    </main>
+    <LayoutFooter />
   </div>
 </template>
-
 <style scoped>
 header {
   position: fixed;

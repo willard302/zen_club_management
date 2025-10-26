@@ -1,10 +1,10 @@
 <script setup lang="ts">
-const authStore = useAuthStore();
+const mainStore = useMainStore();
 </script>
 
 <template>
   <footer>
-    <LayoutsTabBar v-if="authStore.isAuthenticated" />
+    <LayoutTabBar v-if="mainStore.isAuthenticated" />
   </footer>
 </template>
 

@@ -2,8 +2,10 @@
 
 <template>
   <div>
-    Page: contact/chats/index
+    Page: index
   </div>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+
+</style>

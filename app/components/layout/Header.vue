@@ -1,11 +1,9 @@
 <script setup lang="ts">
 const route = useRoute();
-const title = computed<string>(() => {
+const title = computed(() => {
   return route.meta.title ? route.meta.title : 'zen_club';
 });
-const routeBack = () => {
-  history.go(-1);
-}
+const routeBack = () => history.go(-1);
 </script>
 
 <template>

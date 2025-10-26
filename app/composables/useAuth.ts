@@ -1,24 +1,24 @@
 export const useAuth = () => {
-
+  
   const client = useSupabaseClient();
-  const authStore = useAuthStore();
+  const mainStore = useMainStore();
 
   const login = async(email: string, password: string) => {
-
-    await client.auth.signOut();
+    
+    await logout();
 
     const {data, error} = await client.auth.signInWithPassword({
       email, password
     });
 
-    if (error) throw error.message;
+    if (error) throw (`Login failed: ${error.message}`);
 
     return data;
   };
 
   const logout = async() => {
     await client.auth.signOut();
-    authStore.initAuth();
+    mainStore.initAuth();
   };
 
   const register = async(username: string, password: string) => {
@@ -27,7 +27,7 @@ export const useAuth = () => {
       password: password
     });
     return result;
-  };
+  }
 
   return { login, logout, register }
 }

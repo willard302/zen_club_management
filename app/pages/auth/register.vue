@@ -2,11 +2,11 @@
 definePageMeta({
   title: 'register'
 });
-import type { account } from "~/types/auth.types";
-import FieldForm from "./components/FieldForm.vue";
+import { showFailToast, showLoadingToast, showSuccessToast } from "vant";
+import type { ButtonItem, FieldItem } from "~/types/data.types";
 const router = useRouter();
 const { register } = useAuth();
-const fieldItems: account[] = reactive([
+const fieldItems: FieldItem[] = reactive([
   { 
     label: "username",
     value: "test002@gmail.com", 
@@ -37,8 +37,8 @@ const fieldItems: account[] = reactive([
     autocomplete: "new-password"
   }
 ]);
-const buttonItems = [
-  { text: "submit", type: "submit", to: null },
+const buttonItems: ButtonItem[] = [
+  { text: "submit", type: "submit", to: "" },
   { text: "login", type: "button", to: "/auth/login" }
 ];
 

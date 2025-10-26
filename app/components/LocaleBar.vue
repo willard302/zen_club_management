@@ -2,12 +2,8 @@
 import { Locale } from 'vant';
 import vantUS from 'vant/es/locale/lang/en-US';
 import vantTW from 'vant/es/locale/lang/zh-TW';
+import type { message } from '~/types/data.types';
 const { setLocale, t } = useI18n();
-
-interface message {
-  text: string,
-  value: string
-};
 
 const messages: message[] = [
   { text: t('locale.en'), value: 'en' },
@@ -44,8 +40,8 @@ watch(currentLocale, (newLocale) => {
   border: none;
   border-radius: 10px;
   font-weight: 700;
-  background: $color-base;
-  color: $color-font;
+  // background: $color-base;
+  // color: $color-font;
 
   --van-dropdown-menu-shadow: none
 }

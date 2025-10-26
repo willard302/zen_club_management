@@ -1,17 +1,22 @@
 <script setup lang="ts">
-import type{ UploaderFileListItem } from 'vant';
+import { useStorage } from '~/composables/useStorage';
+import { useDataBase } from '~/composables/useDataBase';
+import type { UploaderFileListItem } from 'vant';
 const { uploadFile, deleteFile } = useStorage();
 const { updateUser, getUser } = useDataBase();
-const authStore = useAuthStore();
+const mainStore = useMainStore();
 
 const avatar_url = ref<UploaderFileListItem[]>([
-  { url: authStore.avatarUrl }
+  { url: mainStore.avatarUrl }
 ]);
 
 const onAfterRead = async (
   fileItem: UploaderFileListItem | UploaderFileListItem[]
 ) => {
-  const oldUrl = (await getUser(authStore.userId, 'avatar_url')).avatar_url;
+  if (!mainStore.user || !mainStore.user.id) throw `There is no user or userId.`;
+  const user_id = mainStore.user.id;
+
+  const oldUrl = (await getUser(user_id, 'avatar_url')).avatar_url;
   const file = fileItem as UploaderFileListItem;
   if (!file || !file.file) return;
 
@@ -19,11 +24,11 @@ const onAfterRead = async (
   if (!newUrl) throw "There is no url.";
   
   avatar_url.value = [{ url: newUrl[0] }];
-  const {data, error} = await updateUser(authStore.userId, {avatar_url: newUrl[0]});
+  const {data, error} = await updateUser(user_id, {avatar_url: newUrl[0]});
   if (error) throw error;
   if (!data) throw `there is no data`;
-  if (authStore.userInfo) {
-    Object.assign(authStore.userInfo, {avatar_url: newUrl[0]})
+  if (mainStore.user) {
+    Object.assign(mainStore.user, {avatar_url: newUrl[0]})
   };
 
   if (!oldUrl) throw "There is no oldUrl.";

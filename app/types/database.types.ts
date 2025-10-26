@@ -1,5 +1,3 @@
-import type { ChatMember, File, Numbers } from "./data.types"
-
 export type Json =
   | string
   | number
@@ -16,186 +14,221 @@ export type Database = {
   }
   public: {
     Tables: {
-      chats: {
+      attendance: {
         Row: {
-          created_at: string
+          created_at: string | null
+          event_id: string
           id: number
-          lastMessageContent: string
-          lastMessageDate: string
-          members: ChatMember[]
+          member_id: string
+          remark: string | null
+          status: Database["public"]["Enums"]["attendance_status"] | null
         }
         Insert: {
-          created_at?: string
-          id?: number
-          lastMessageContent?: string
-          lastMessageDate?: string
-          members: ChatMember[]
+          created_at?: string | null
+          event_id: string
+          id: number
+          member_id: string
+          remark?: string | null
+          status?: Database["public"]["Enums"]["attendance_status"] | null
         }
         Update: {
-          created_at?: string
+          created_at?: string | null
+          event_id?: string
           id?: number
-          lastMessageContent?: string
-          lastMessageDate?: string
-          members?: ChatMember[]
+          member_id?: string
+          remark?: string | null
+          status?: Database["public"]["Enums"]["attendance_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clubs: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          short_name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          short_name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          short_name?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
-      friends: {
+      events: {
         Row: {
-          created_at: string
-          friend_id: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          friend_id: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          friend_id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "friends_friend_id_fkey"
-            columns: ["friend_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "friends_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      post_comments: {
-        Row: {
-          author: string
-          author_id: string
-          content: string
-          created_at: string
-          id: number
-          post_id: number
-          updated_at: string
-        }
-        Insert: {
-          author: string
-          author_id: string
-          content?: string
-          created_at?: string
-          id?: number
-          post_id: number
-          updated_at?: string
-        }
-        Update: {
-          author?: string
-          author_id?: string
-          content?: string
-          created_at?: string
-          id?: number
-          post_id?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_post"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "posts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_comments_author_id_fkey"
-            columns: ["author_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_comments_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "posts"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      posts: {
-        Row: {
-          accessible_id: string[]
-          author: string
-          author_id: string
-          avatar_url: string
-          content: string
-          created_at: string
-          files: File[]
-          id: number
-          trackers_id: string[]
-        }
-        Insert: {
-          accessible_id: string[]
-          author?: string
-          author_id: string
-          avatar_url?: string
-          content?: string
-          created_at?: string
-          files: File[]
-          id?: number
-          trackers_id: string[]
-        }
-        Update: {
-          accessible_id?: string[]
-          author?: string
-          author_id?: string
-          avatar_url?: string
-          content?: string
-          created_at?: string
-          files?: File[]
-          id?: number
-          trackers_id?: string[]
-        }
-        Relationships: [
-          {
-            foreignKeyName: "posts_author_id_fkey"
-            columns: ["author_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_private: {
-        Row: {
-          birth: string
-          birth_city: string
-          birth_country: string
-          created_at: string
-          email: string
+          club_id: string | null
+          created_at: string | null
+          created_by: string | null
+          date: string | null
+          description: string | null
+          end_at: string | null
           id: string
-          phone: string
+          is_public: boolean | null
+          location: string | null
+          start_at: string | null
+          title: string
+          updated_at: string | null
         }
         Insert: {
-          birth?: string
-          birth_city?: string
-          birth_country?: string
-          created_at: string
-          email?: string
+          club_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          date?: string | null
+          description?: string | null
+          end_at?: string | null
           id?: string
-          phone?: string
+          is_public?: boolean | null
+          location?: string | null
+          start_at?: string | null
+          title: string
+          updated_at?: string | null
         }
         Update: {
-          birth?: string
-          birth_city?: string
-          birth_country?: string
-          created_at?: string
-          email?: string
+          club_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          date?: string | null
+          description?: string | null
+          end_at?: string | null
           id?: string
+          is_public?: boolean | null
+          location?: string | null
+          start_at?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      member_status: {
+        Row: {
+          contact_date: string | null
+          contact_way: string | null
+          created_at: string | null
+          id: number
+          member_id: string | null
+          member_status: string | null
+        }
+        Insert: {
+          contact_date?: string | null
+          contact_way?: string | null
+          created_at?: string | null
+          id: number
+          member_id?: string | null
+          member_status?: string | null
+        }
+        Update: {
+          contact_date?: string | null
+          contact_way?: string | null
+          created_at?: string | null
+          id?: number
+          member_id?: string | null
+          member_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_status_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      members: {
+        Row: {
+          birthday: string
+          club_group: string
+          club_role: Database["public"]["Enums"]["club_role"]
+          created_at: string
+          department: string
+          email: string | null
+          id: string
+          instagram: string
+          inviter: string
+          join_date: string
+          line_id: string
+          name: string
+          phone: string
+          student_id: string
+          student_year: Database["public"]["Enums"]["student_year"] | null
+        }
+        Insert: {
+          birthday?: string
+          club_group?: string
+          club_role?: Database["public"]["Enums"]["club_role"]
+          created_at?: string
+          department?: string
+          email?: string | null
+          id?: string
+          instagram?: string
+          inviter?: string
+          join_date?: string
+          line_id?: string
+          name?: string
           phone?: string
+          student_id?: string
+          student_year?: Database["public"]["Enums"]["student_year"] | null
+        }
+        Update: {
+          birthday?: string
+          club_group?: string
+          club_role?: Database["public"]["Enums"]["club_role"]
+          created_at?: string
+          department?: string
+          email?: string | null
+          id?: string
+          instagram?: string
+          inviter?: string
+          join_date?: string
+          line_id?: string
+          name?: string
+          phone?: string
+          student_id?: string
+          student_year?: Database["public"]["Enums"]["student_year"] | null
         }
         Relationships: []
       }
@@ -203,35 +236,41 @@ export type Database = {
         Row: {
           avatar_url: string
           created_at: string
+          department: string
           email: string
           gender: string
           id: string
           name: string
-          numbers: Numbers[] | null
+          phone: string
+          role: Database["public"]["Enums"]["club_role"]
           status: string
-          username: string
+          student_years: Database["public"]["Enums"]["student_year"]
         }
         Insert: {
-          avatar_url: string
-          created_at?: string
-          email: string
-          gender?: string
-          id: string
-          name?: string
-          numbers?: Numbers[] | null
-          status?: string
-          username: string
-        }
-        Update: {
           avatar_url?: string
           created_at?: string
+          department?: string
           email?: string
           gender?: string
           id?: string
           name?: string
-          numbers?: Numbers[] | null
+          phone?: string
+          role?: Database["public"]["Enums"]["club_role"]
           status?: string
-          username?: string
+          student_years?: Database["public"]["Enums"]["student_year"]
+        }
+        Update: {
+          avatar_url?: string
+          created_at?: string
+          department?: string
+          email?: string
+          gender?: string
+          id?: string
+          name?: string
+          phone?: string
+          role?: Database["public"]["Enums"]["club_role"]
+          status?: string
+          student_years?: Database["public"]["Enums"]["student_year"]
         }
         Relationships: []
       }
@@ -243,7 +282,20 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      attendance_status: "attendance" | "lateness" | "leave" | "absence"
+      club_role:
+        | "admin"
+        | "teacher"
+        | "counselor"
+        | "president"
+        | "vice_president"
+        | "team_director"
+        | "deputy_team_director"
+        | "committee_member"
+        | "member"
+        | "new_member"
+        | "guest"
+      student_year: "freshman" | "sophomore" | "junior" | "senior" | "graduate"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -370,6 +422,22 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      attendance_status: ["attendance", "lateness", "leave", "absence"],
+      club_role: [
+        "admin",
+        "teacher",
+        "counselor",
+        "president",
+        "vice_president",
+        "team_director",
+        "deputy_team_director",
+        "committee_member",
+        "member",
+        "new_member",
+        "guest",
+      ],
+      student_year: ["freshman", "sophomore", "junior", "senior", "graduate"],
+    },
   },
 } as const

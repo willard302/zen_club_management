@@ -1,31 +1,48 @@
-export type cityType = {
+import type { UserRow, UserUpdate } from "./supabase";
+import type { ButtonNativeType, FieldType } from "vant";
+
+export type MainStoreState = {
+  isAuthenticated: boolean,
+  user: UserRow | UserUpdate | null,
+  tabBarActive: string,
+  defaultAvatar: string
+};
+
+export type FieldItem = {
+  label: string;
+  value: string;
   name: string;
+  type: FieldType;
+  placeholder?: string;
+  required: boolean;
+  message?: string;
+  autocomplete?: string;
+};
+
+export type message = {
+  text: string,
+  value: string
+};
+
+export type cityType = {
+  name: string,
   geo: string
-}
+};
 
-export type File = {
-  url: string
-  type: string
-}
+export type Contact = {
+  name: string,
+  birth: string,
+  role: string
+};
 
-interface NumbersDetail {
-  "sign": number,
-  "birth": number,
-  "empty": number[],
-  "nature": number[],
-  "spirit": number,
-  "talent": number[],
-  "destiny": number,
-  "birthDay": string
-}
+export type navItem = {
+  label: string,
+  path: string,
+  icon: string[]
+};
 
-export type Numbers = {
-  "sum": NumbersDetail,
-  "moon": NumbersDetail
-}
-
-export type ChatMember = {
-  "user_id": string,
-  "name": string,
-  "avatar_url": string
-}
+export type ButtonItem = {
+  text: string, 
+  type: ButtonNativeType,
+  to?: string
+};

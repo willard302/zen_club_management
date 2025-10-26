@@ -10,14 +10,22 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   components: true,
   modules: [
-    '@vant/nuxt',
-    '@nuxtjs/i18n',
-    '@nuxtjs/supabase',
-    '@vesp/nuxt-fontawesome',
+    '@nuxt/eslint',
+    '@nuxt/image',
     '@pinia/nuxt',
-    'pinia-plugin-persistedstate/nuxt'
+    'pinia-plugin-persistedstate/nuxt',
+    '@vesp/nuxt-fontawesome',
+    '@nuxtjs/supabase',
+    '@nuxtjs/i18n',
+    '@vant/nuxt'
   ],
-  css: ['@/assets/scss/main.scss'],
+  i18n: {
+    defaultLocale: 'tw',
+    locales: [
+      {code: 'en', name: 'English', file: 'en.ts'},
+      {code: 'tw', name: '繁體中文', file: 'tw.ts'}
+    ]
+  },
   vite: {
     plugins: [
       Components({
@@ -27,30 +35,20 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: 
-            ` @use "~/assets/scss/_colors.scss" as *;
+          additionalData:
+            ` @use "~/assets/scss/_variables.scss" as *;
               @use "~/assets/scss/_mixin.scss" as *;
             `
         }
       }
     }
   },
-  typescript: {
-    typeCheck: true,
-    strict: true
-  },
   plugins: [
     { src: '~/plugins/vant.client.ts', mode: 'client' }
   ],
-  i18n: {
-    defaultLocale: 'tw',
-    locales: [
-      { code: 'en', name: 'English', file: 'en.ts' },
-      { code: 'tw', name: '繁中', file: 'tw.ts' }
-    ],
-    detectBrowserLanguage: {
-
-    }
+  typescript: {
+    typeCheck: true,
+    strict: true
   },
   runtimeConfig: {
     public: {
@@ -65,14 +63,12 @@ export default defineNuxtConfig({
       login: '/auth/login',
       callback: '/auth/confirm',
       exclude: ['/auth/register']
-    },
-    types: '~/app/types/database.types.ts'
+    }
   },
   fontawesome: {
     icons: {
-      solid: ['house', 'magnifying-glass', 'user', 'pen', 'caret-right', 'check', 'ellipsis-vertical'],
-      regular: ['user', 'face-smile'],
-      brands: ['rocketchat']
+      solid: ['house', 'user', 'pen', 'caret-right', 'check', 'ellipsis-vertical', 'id-card', 'calendar-days', 'square-plus'],
+      regular: ['user', 'face-smile']
     }
   },
   piniaPluginPersistedstate: {

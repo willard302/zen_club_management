@@ -1,19 +1,31 @@
 <script setup lang="ts">
 definePageMeta({title: "profile"});
 import Avatar from '~/components/Avatar.vue';
-const authStore = useAuthStore();
+const mainStore = useMainStore();
 const router = useRouter();
 const { logout } = useAuth();
 const { updateUser } = useDataBase();
+
+onMounted(() => {
+  if (!mainStore.user || !mainStore.user.id ) throw new Error("There is no user, user_id.");
+  username.value = mainStore.user.name ?? "guest";
+  status.value = mainStore.user.status ?? "";
+});
+
 const isEdit = ref(false);
+const username = ref("");
+const status = ref("");
+
 const lists = reactive([
-  { title: 'user_data', path: '/profile/userData' },
-  { title: 'my_friends', path: '/contact/friends' }
+  { title: 'user_data', path: '/profile/userData' }
 ]);
+
 const handleToggleState = async() => {
-  if (isEdit.value) {
-    await updateUser(authStore.userId, { 'status': '123' });
-  }
+  const userId = mainStore.user?.id;
+  if (!userId) throw new Error("There is no id.");
+
+  if (isEdit.value) await updateUser(userId, { 'status': status.value });
+
   isEdit.value = !isEdit.value;
 };
 const handleLogout = async () => {
@@ -26,19 +38,24 @@ const handleLogout = async () => {
     message: 'logout success!'
   });
   setTimeout(() => router.push('/'), 1000)
-}
+};
 </script>
 
 <template>
   <div>
     <Avatar></Avatar>
     <van-cell-group class="profile__header">
-      <div class="profile__heading">
-        <div class="name">{{ authStore.userInfo!.name }}</div>
-      </div>
+      <!-- <div class="profile__heading">
+        <div class="name">{{ mainStore.user?.name }}</div>
+      </div> -->
+      <van-cell-group inset>
+        <van-field v-model="username" input-align="center" :disabled="!isEdit"></van-field>
+      </van-cell-group>
       <div class="profile__heading">
         <div class="status">
-          <input type="textarea" v-model="authStore.userInfo!.status" :disabled="!isEdit">
+          <van-cell-group inset>
+            <van-field v-model="status" input-align="center" :disabled="!isEdit" />
+          </van-cell-group>
           <van-button v-if="!isEdit" @click="handleToggleState()">
             <client-only>
               <font-awesome :icon="['fas', 'pen']" />

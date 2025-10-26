@@ -1,21 +1,17 @@
 <script setup lang="ts">
-const authStore = useAuthStore();
+import type { navItem } from '~/types/data.types';
+const mainStore = useMainStore();
 const home = { label: 'home', path: '/', icon: ['fas', 'house'] };
-const newFriends = { label: 'newFriends', path: '/newFriends', icon: ['fas', 'magnifying-glass'] };
-const contact = { label: 'contact', path: '/contact', icon: ['fab', 'rocketchat'] };
+const members = { label: 'members', path: '/members', icon: ['fas', 'id-card'] };
+const calendar = { label: 'calendar', path: '/calendar', icon: ['fas', 'calendar-days'] };
 const profile = { label: 'profile', path: '/profile', icon: ['fas', 'user'] };
 
-interface navItems {
-  label: string,
-  path: string,
-  icon: string[]
-};
-const navItems: navItems[] = [home, newFriends, contact, profile];
+const navItems: navItem[] = [home, members, calendar, profile];
 
 </script>
 
 <template>
-  <van-tabbar v-model="authStore.tabBarActive">
+  <van-tabbar v-model="mainStore.tabBarActive">
     <van-tabbar-item
       v-for="(navItem, navIdx) in navItems"
       :key="navIdx"
