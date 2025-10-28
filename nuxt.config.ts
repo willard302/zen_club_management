@@ -43,8 +43,9 @@ export default defineNuxtConfig({
       }
     }
   },
+  css: ['~/assets/scss/main.scss'],
   plugins: [
-    { src: '~/plugins/vant.client.ts', mode: 'client' }
+    { src: '~/plugins/vant.client.ts', mode: 'client' },
   ],
   typescript: {
     typeCheck: true,

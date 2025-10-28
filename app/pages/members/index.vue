@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MemberCard from '~/components/MemberCard.vue';
 import type { ButtonItem, FieldItem } from '~/types/data.types';
-import type { MemebersInsert, MemebersRow } from '~/types/supabase';
+import type { MemebersInsert } from '~/types/supabase';
 
 const { getMembers, insertMember } = useDataBase();
 const mainStore = useMainStore();
@@ -25,7 +25,7 @@ const fieldItems: FieldItem[] = reactive([
     label: "birthday",
     value: "", 
     name: "birthday", 
-    type: "text",
+    type: "datetime-local",
     required: false,
     message: 'Hints.enter_birthday'
   },
@@ -62,6 +62,10 @@ const fieldItems: FieldItem[] = reactive([
     message: 'Hints.enter_inviter'
   }
 ]);
+const buttonItems: ButtonItem[] = [
+  { text: "confirm", type: "submit", to: "" },
+  { text: "cancel", type: "button", to: "" }
+]
 const contacts = ref<MemebersInsert[]>([]);
 
 const loadMembers = async():Promise<MemebersInsert[]> => {
@@ -118,15 +122,19 @@ const onSubmit = async() => {
         @delete="onDelete"
       ></MemberCard>
     </van-list>
-    <van-dialog v-model:show="showNewMemberForm" @confirm="onSubmit">
-      <FieldForm :field-items="fieldItems"/>
-    </van-dialog>
+    <van-popup 
+      v-model:show="showNewMemberForm" 
+      position="bottom"
+      round
+      @confirm="onSubmit"
+    >
+      <FieldForm
+        custom-class="members" 
+        :field-items="fieldItems"
+        :button-items="buttonItems"
+      />
+    </van-popup>
   </div>
 </template>
 
-<style scoped lang="scss">
-  :root(.van-form) {
-    position: unset;
-    width: 100%;
-  }
-</style>
+<style scoped lang="scss"></style>

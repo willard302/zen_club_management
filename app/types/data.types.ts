@@ -1,4 +1,4 @@
-import type { UserRow, UserUpdate } from "./supabase";
+import type { EventsInsert, UserRow, UserUpdate } from "./supabase";
 import type { ButtonNativeType, FieldType } from "vant";
 
 export type MainStoreState = {
@@ -10,11 +10,11 @@ export type MainStoreState = {
 
 export type FieldItem = {
   label: string;
-  value: string;
-  name: string;
+  value: string | number | boolean | null;
+  name: keyof EventsInsert | string,
   type: FieldType;
   placeholder?: string;
-  required: boolean;
+  required?: boolean;
   message?: string;
   autocomplete?: string;
 };
@@ -44,5 +44,20 @@ export type navItem = {
 export type ButtonItem = {
   text: string, 
   type: ButtonNativeType,
-  to?: string
+  to?: string,
+  action?: string
 };
+
+type EventExtendedMetaData = {
+  created_at: string,
+  created_by: string
+}
+
+export type EventExtended = {
+  description: string;
+  location: string;
+  participants: string[];
+  priority: string;
+  customId: number;
+  metaData: EventExtendedMetaData
+}

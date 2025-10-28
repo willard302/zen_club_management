@@ -1,37 +1,47 @@
 <script setup lang="ts">
-import type { ButtonItem, FieldItem } from '~/types/data.types';
+import type { ButtonItem } from '~/types/data.types';
 
-const props = defineProps<{
-  fieldItems: FieldItem[],
-  buttonItems?: ButtonItem[]
-}>();
+const props = defineProps(['fieldItems', 'buttonItems', 'customClass'])
 
-const emit = defineEmits(['submit']);
-
+const emit = defineEmits(['submit', 'button']);
 const fields = ref(props.fieldItems);
-
-const onSubmit = () => {
-  emit('submit', fields.value);
-};
+const handleOnClick = (event: ButtonItem) => {
+  if (event.to) return navigateTo(event.to);
+  if (event.type === 'submit') return emit('submit', fields.value);
+  if (event.action) return emit('button', event.action);
+}
 </script>
 
 <template>
-  <van-form @submit="onSubmit">
+  <van-form :class="props.customClass">
     <van-cell-group inset>
-      <van-field
-        v-for="(field, fieldIdx) in fields"
-        :key="fieldIdx"
-        :type="field.type"
-        v-model="field.value"
-        :name="field.name"
-        :label="$t(field.label)"
-        :placeholder="$t(field.placeholder ?? '')"
-        :rules="[{
-          required: field.required,
-          message: $t(field.message ?? '')
-        }]"
-        :input-attrs="{ autocomplete: field.autocomplete }"
-      />
+      <template v-for="(field, fieldIdx) in fields" :key="fieldIdx">
+        <template v-if="field.type === 'checkbox'">
+          <van-field
+            :type="field.type"
+            :name="field.name"
+            :label="$t(field.label)"
+          >
+            <template v-if="field.type === 'checkbox'" #input>
+              <van-switch v-model="field.value" />
+            </template>
+          </van-field>
+        </template>
+        <van-field
+          v-else
+          :type="field.type"
+          v-model="field.value"
+          :name="field.name"
+          :label="$t(field.label)"
+          :placeholder="field.placeholder ? $t(field.placeholder) : ''"
+          :rules="[{
+            required: field.required,
+            message: field.message ? $t(field.message) : ''
+          }]"
+          :input-attrs="{ autocomplete: field.autocomplete }" 
+        />
+      </template>
+      
     </van-cell-group>
     <div v-if="props.buttonItems" class="button__menu">
       <van-button 
@@ -40,7 +50,7 @@ const onSubmit = () => {
         round block
         type="primary"
         :native-type="btnItem.type"
-        :to="btnItem.to"
+        @click="handleOnClick(btnItem)"
       >
         {{ $t(btnItem.text) }}
       </van-button>
@@ -63,4 +73,13 @@ const onSubmit = () => {
     max-width: 80%;
   }
 }
+.calendar, .members {
+  .button__menu {
+    display: flex;
+
+    .van-button {
+      width: 40%;
+    }
+  }
+} 
 </style>

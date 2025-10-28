@@ -39,7 +39,7 @@ const handleLogin = async(account: FieldItem[]) => {
 
   if (!username || !password) throw new Error("There is no username or password.");
 
-  const response = await login(username, password);
+  const response = await login(username as string, password as string);
 
   if (!response.user || !response.user.id) throw new Error("Login failed");
 
@@ -65,7 +65,7 @@ const handleLogin = async(account: FieldItem[]) => {
 };
 
 const buttonItems: ButtonItem[] = [
-  { text: "submit", type: "submit", to: "" },
+  { text: "submit", type: "submit" },
   { text: "register", type: "button", to: "/auth/register" }
 ];
 </script>

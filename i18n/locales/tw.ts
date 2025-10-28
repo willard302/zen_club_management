@@ -1,8 +1,10 @@
 export default {
-  '':"",
   birth_date: "出生日期",
   birthday: "生日",
   cancel: "取消",
+  confirm: "確認",
+  create: "創建",
+  day: "日",
   delete: "刪除",
   department: "科系",
   edit: "編輯",
@@ -12,6 +14,8 @@ export default {
   login: "登入",
   logout: "登出",
   messages: "留言",
+  more: "更多",
+  month: "月",
   name: "姓名",
   password: "密碼",
   password_confirm: "確認密碼",
@@ -23,7 +27,17 @@ export default {
   submit: "提交",
   user_data: "個人資料",
   username: "帳號",
+  week: "週",
   zen_club: "禪學社",
+  calendar: {
+    all_day: "全天",
+    description: "活動描述",
+    end: "結束時間",
+    start: "開始時間",
+    title: "活動標題",
+    list: "列表",
+    location: "活動地點"
+  },
   locale: {
     en: '英',
     tw: '中'

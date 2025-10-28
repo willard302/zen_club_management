@@ -12,18 +12,21 @@ const messages: message[] = [
 
 const currentLocale = ref("tw");
 
-watch(currentLocale, (newLocale) => {
-  switch(newLocale) {
-    case 'tw':
-      setLocale('tw');
-      Locale.use('zh-TW', vantTW);
-      break;
-    default:
-      setLocale('en');
-      Locale.use('en-US', vantUS);
-      break;
+watch(
+  () => currentLocale.value,
+  (newLocale) => {
+    switch(newLocale) {
+      case 'tw':
+        setLocale('tw');
+        Locale.use('zh-TW', vantTW);
+        break;
+      default:
+        setLocale('en');
+        Locale.use('en-US', vantUS);
+        break;
+    }
   }
-})
+)
 
 </script>
 
@@ -40,9 +43,6 @@ watch(currentLocale, (newLocale) => {
   border: none;
   border-radius: 10px;
   font-weight: 700;
-  // background: $color-base;
-  // color: $color-font;
-
   --van-dropdown-menu-shadow: none
 }
 </style>

@@ -85,63 +85,42 @@ export type Database = {
       }
       events: {
         Row: {
-          club_id: string | null
-          created_at: string | null
-          created_by: string | null
-          date: string | null
-          description: string | null
-          end_at: string | null
+          created_at: string
+          created_by: string
+          description: string
+          end_at: string
           id: string
-          is_public: boolean | null
-          location: string | null
-          start_at: string | null
+          is_all_day: boolean
+          location: string
+          participants: string[] | null
+          start_at: string
           title: string
-          updated_at: string | null
         }
         Insert: {
-          club_id?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          date?: string | null
-          description?: string | null
-          end_at?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string
+          end_at?: string
           id?: string
-          is_public?: boolean | null
-          location?: string | null
-          start_at?: string | null
-          title: string
-          updated_at?: string | null
+          is_all_day?: boolean
+          location?: string
+          participants?: string[] | null
+          start_at?: string
+          title?: string
         }
         Update: {
-          club_id?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          date?: string | null
-          description?: string | null
-          end_at?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string
+          end_at?: string
           id?: string
-          is_public?: boolean | null
-          location?: string | null
-          start_at?: string | null
+          is_all_day?: boolean
+          location?: string
+          participants?: string[] | null
+          start_at?: string
           title?: string
-          updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "events_club_id_fkey"
-            columns: ["club_id"]
-            isOneToOne: false
-            referencedRelation: "clubs"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "events_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       member_status: {
         Row: {
@@ -298,7 +277,19 @@ export type Database = {
       student_year: "freshman" | "sophomore" | "junior" | "senior" | "graduate"
     }
     CompositeTypes: {
-      [_ in never]: never
+      event_extended: {
+        location: string | null
+        description: string | null
+        is_public: boolean | null
+        participants: string[] | null
+        metadata:
+          | Database["public"]["CompositeTypes"]["event_extended_meta_data"]
+          | null
+      }
+      event_extended_meta_data: {
+        created_at: string | null
+        created_by: string | null
+      }
     }
   }
 }

@@ -1,8 +1,10 @@
 export default {
-  '':"",
   birth_date: "Birth Date",
   birthday: "Birth Day",
   cancel: "Cancel",
+  confirm: "Confirm",
+  create: "Create",
+  day: "Day",
   delete: "Delete",
   department: "Department",
   edit: "Edit",
@@ -12,6 +14,8 @@ export default {
   login: "Login",
   logout: "Logout",
   messages: "Messages",
+  more: "More",
+  month: "Month",
   name: "Name",
   password: "Password",
   password_confirm: "Confirm Password",
@@ -24,7 +28,17 @@ export default {
   submit: "Submit",
   user_data: "User Data",
   username: "Username",
+  week: "Week",
   zen_club: "Zen Club",
+  calendar: {
+    all_day: "All Day",
+    description: "Description",
+    end: "End",
+    start: "Start",
+    title: "Title",
+    list: "List",
+    location: "Location"
+  },
   locale: {
     en: 'EN',
     tw: 'TW'
