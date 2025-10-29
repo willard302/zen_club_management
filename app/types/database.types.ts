@@ -85,38 +85,44 @@ export type Database = {
       }
       events: {
         Row: {
+          all_day: boolean
+          color: string
           created_at: string
           created_by: string
           description: string
           end_at: string
           id: string
-          is_all_day: boolean
           location: string
           participants: string[] | null
+          recurrence: Database["public"]["Enums"]["event_recurrence"]
           start_at: string
           title: string
         }
         Insert: {
+          all_day?: boolean
+          color?: string
           created_at?: string
           created_by?: string
           description?: string
-          end_at?: string
+          end_at: string
           id?: string
-          is_all_day?: boolean
           location?: string
           participants?: string[] | null
-          start_at?: string
+          recurrence?: Database["public"]["Enums"]["event_recurrence"]
+          start_at: string
           title?: string
         }
         Update: {
+          all_day?: boolean
+          color?: string
           created_at?: string
           created_by?: string
           description?: string
           end_at?: string
           id?: string
-          is_all_day?: boolean
           location?: string
           participants?: string[] | null
+          recurrence?: Database["public"]["Enums"]["event_recurrence"]
           start_at?: string
           title?: string
         }
@@ -274,6 +280,7 @@ export type Database = {
         | "member"
         | "new_member"
         | "guest"
+      event_recurrence: "none" | "daily" | "weekly" | "monthly" | "yearly"
       student_year: "freshman" | "sophomore" | "junior" | "senior" | "graduate"
     }
     CompositeTypes: {
@@ -428,6 +435,7 @@ export const Constants = {
         "new_member",
         "guest",
       ],
+      event_recurrence: ["none", "daily", "weekly", "monthly", "yearly"],
       student_year: ["freshman", "sophomore", "junior", "senior", "graduate"],
     },
   },

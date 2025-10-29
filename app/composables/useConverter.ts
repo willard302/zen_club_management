@@ -3,9 +3,11 @@ import type { FieldItem } from "~/types/data.types";
 import type { EventsInsert } from "~/types/supabase"
 
 export const useConverter = () => {
+  const mainStore = useMainStore();
+  const author = mainStore.user?.name;
 
-  const fieldsToDbEvents = (fields: FieldItem[]): EventsInsert => {
-    const mainStore = useMainStore();
+  const fieldsToDatabase = (fields: FieldItem[]): EventsInsert => {
+    
     const event: any = {};
     fields.forEach(f => {
       switch(f.name) {
@@ -15,20 +17,22 @@ export const useConverter = () => {
         case "end": 
           event['end_at'] = f.value;
           break;
-        case "all_day":
-          event['is_all_day'] = f.value;
-          break;
         default:
           event[f.name] = f.value;
           break
       }
     });
 
-    event.is_all_day = true;
     event.created_at = dateToString(Date.now(), true);
-    event.created_by = mainStore.user?.name;
-    event.participants = [mainStore.user?.name];
+    event.created_by = author;
     return event as EventsInsert;
+  };
+
+  const fieldsToDbEvents = (fields: FieldItem[]) => {
+    const event = fieldsToDatabase(fields);
+    event.participants = [author ?? ""];
+    event.all_day = true;
+    return event;
   };
 
   const dbToCalendarEvent = (dbEvent: EventsInsert): EventInput => {
@@ -37,13 +41,16 @@ export const useConverter = () => {
       title: dbEvent.title,
       start: dbEvent.start_at,
       end: dbEvent.end_at,
-      allDay: dbEvent.is_all_day,
+      allDay: dbEvent.all_day,
+      backgroundColor: dbEvent.color,
+      borderColor: dbEvent.color,
       extendedProps: {
         location: dbEvent.location,
         description: dbEvent.description,
         created_at: dbEvent.created_at,
         created_by: dbEvent.created_by,
-        participants: dbEvent.participants
+        participants: dbEvent.participants,
+        recurrence: dbEvent.recurrence
       }
     }
   };
@@ -66,8 +73,9 @@ export const useConverter = () => {
   
 
   return {
-    dbToCalendarEvent,
+    fieldsToDatabase,
     fieldsToDbEvents,
+    dbToCalendarEvent,
     dateToString
   }
 }

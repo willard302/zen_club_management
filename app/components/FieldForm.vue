@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import type { ButtonItem } from '~/types/data.types';
+import type { ButtonItem, FieldItem } from '~/types/data.types';
 
-const props = defineProps(['fieldItems', 'buttonItems', 'customClass'])
+const props = defineProps<{
+  fieldItems?: FieldItem[],
+  buttonItems?: ButtonItem[],
+  customClass?: string
+}>();
 
 const emit = defineEmits(['submit', 'button']);
 const fields = ref(props.fieldItems);
@@ -9,28 +13,17 @@ const handleOnClick = (event: ButtonItem) => {
   if (event.to) return navigateTo(event.to);
   if (event.type === 'submit') return emit('submit', fields.value);
   if (event.action) return emit('button', event.action);
-}
+};
 </script>
 
 <template>
   <van-form :class="props.customClass">
     <van-cell-group inset>
       <template v-for="(field, fieldIdx) in fields" :key="fieldIdx">
-        <template v-if="field.type === 'checkbox'">
-          <van-field
-            :type="field.type"
-            :name="field.name"
-            :label="$t(field.label)"
-          >
-            <template v-if="field.type === 'checkbox'" #input>
-              <van-switch v-model="field.value" />
-            </template>
-          </van-field>
-        </template>
         <van-field
-          v-else
+          v-if="['text', 'number', 'password'].includes(field.type)"
           :type="field.type"
-          v-model="field.value"
+          v-model="field.value as string | number | undefined"
           :name="field.name"
           :label="$t(field.label)"
           :placeholder="field.placeholder ? $t(field.placeholder) : ''"
@@ -40,6 +33,16 @@ const handleOnClick = (event: ButtonItem) => {
           }]"
           :input-attrs="{ autocomplete: field.autocomplete }" 
         />
+        <van-field
+          v-else-if="field.type === 'checkbox'"
+          :type="field.type"
+          :name="field.name"
+          :label="$t(field.label)"
+        >
+          <template v-if="field.type === 'checkbox'" #input>
+            <van-switch v-model="field.value" />
+          </template>
+        </van-field>
       </template>
       
     </van-cell-group>

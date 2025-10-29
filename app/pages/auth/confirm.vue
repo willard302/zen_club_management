@@ -3,7 +3,7 @@ const user = useSupabaseClient();
 
 watch(user, () => {
   if (user) {
-    return navigateTo('/')
+    return navigateTo('/home')
   }
 }, {immediate: true})
 </script>

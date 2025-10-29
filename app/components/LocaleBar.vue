@@ -4,17 +4,17 @@ import vantUS from 'vant/es/locale/lang/en-US';
 import vantTW from 'vant/es/locale/lang/zh-TW';
 import type { message } from '~/types/data.types';
 const { setLocale, t } = useI18n();
+const mainStore = useMainStore();
 
 const messages: message[] = [
   { text: t('locale.en'), value: 'en' },
   { text: t('locale.tw'), value: 'tw' }
 ];
 
-const currentLocale = ref("tw");
-
 watch(
-  () => currentLocale.value,
+  () => mainStore.locale,
   (newLocale) => {
+    console.log(newLocale)
     switch(newLocale) {
       case 'tw':
         setLocale('tw');
@@ -32,7 +32,7 @@ watch(
 
 <template>
   <van-dropdown-menu class="locale__select">
-    <van-dropdown-item v-model="currentLocale" :options="messages" />
+    <van-dropdown-item v-model="mainStore.locale" :options="messages" />
   </van-dropdown-menu>
 </template>
 

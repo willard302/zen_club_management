@@ -85,6 +85,15 @@ export const useDataBase = () => {
       .select()
   };
 
+  const rmMember = async(member_id:string) => {
+    const response = await client
+      .from("members")
+      .delete()
+      .eq('id', member_id);
+
+    return response.status;
+  }
+
   const rmEvent = async(event_id: string) => {
     const response = await client
       .from('events')
@@ -101,6 +110,7 @@ export const useDataBase = () => {
     insertMember,
     insertEvent,
     updateUser,
+    rmMember,
     rmEvent
   }
 }

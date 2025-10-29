@@ -60,6 +60,7 @@ const handleLogin = async(account: FieldItem[]) => {
     });
     setTimeout(() => {
       router.push('/profile');
+      mainStore.tabBarActive = 'profile'
     }, 2000);
   }
 };

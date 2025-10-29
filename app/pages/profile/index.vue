@@ -37,7 +37,7 @@ const handleLogout = async () => {
   showSuccessToast({
     message: 'logout success!'
   });
-  setTimeout(() => router.push('/'), 1000)
+  setTimeout(() => router.push('/auth'), 1000)
 };
 </script>
 
@@ -45,12 +45,9 @@ const handleLogout = async () => {
   <div>
     <Avatar></Avatar>
     <van-cell-group class="profile__header">
-      <!-- <div class="profile__heading">
+      <div class="profile__heading">
         <div class="name">{{ mainStore.user?.name }}</div>
-      </div> -->
-      <van-cell-group inset>
-        <van-field v-model="username" input-align="center" :disabled="!isEdit"></van-field>
-      </van-cell-group>
+      </div>
       <div class="profile__heading">
         <div class="status">
           <van-cell-group inset>

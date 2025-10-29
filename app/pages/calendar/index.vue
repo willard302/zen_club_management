@@ -3,29 +3,38 @@ import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import rrulePlugin from '@fullcalendar/rrule';
 import listPlugin from '@fullcalendar/list';
+import enLocale from '@fullcalendar/core/locales/en-gb';
+import twLocale from '@fullcalendar/core/locales/zh-tw';
 import type { EventInput } from '@fullcalendar/core';
-import type { ButtonItem, FieldItem } from "~/types/data.types";
+import type { ButtonItem, FieldItem, Operation } from "~/types/data.types";
 const { insertEvent, getEvents, rmEvent } = useDataBase();
 const { dbToCalendarEvent, fieldsToDbEvents } = useConverter();
-
-onMounted(async() => {
-  await loadEvents();
-});
-const showNewEventEditor = ref(false);
-const showEventAction = ref(false);
-const currentEvent = ref("");
-const calendarRef = ref<any>(null);
-const events = ref<EventInput[]>([]);
-const operations = [
+const mainStore = useMainStore();
+const operations: Operation[] = [
   { name: 'month', id: 'dayGridMonth' },
   { name: 'week', id: 'timeGridWeek' },
   { name: 'day', id: 'timeGridDay' },
   { name: 'calendar.list', id: 'listWeek' }
 ];
+const buttonItems: ButtonItem[] = [
+  { text: "create", type: "submit", action: "create" },
+  { text: "cancel", type: "button", action: "cancel"}
+];
+const buttonItems_eventAction: ButtonItem[] = [
+  { text: "edit", type: "button", to: "/calendar/editor" },
+  { text: "delete", type: "button", action: "delete_eventAction" },
+  { text: "cancel", type: "button", action: "cancel"}
+];
+const showNewEventEditor = ref(false);
+const showEventAction = ref(false);
+const currentEvent = ref("");
+const calendarRef = ref<any>(null);
+const events = ref<EventInput[]>([]);
 const calendaroperations = ref({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
+  locales: [enLocale, twLocale],
+  locale: mainStore.locale === 'tw' ? twLocale : enLocale,
   initialView: 'dayGridMonth',
   editable: true,
   selectable: true,
@@ -35,6 +44,7 @@ const calendaroperations = ref({
     console.log("dateClick: ", info)
   },
   eventClick: async(info: any) => {
+    console.log("eventClick", info)
     showEventAction.value = true;
     currentEvent.value = info.event.id;
   },
@@ -46,6 +56,12 @@ const fieldItems: FieldItem[] = reactive([
     name: "title",
     type: "text",
     required: true
+  },
+  {
+    label: "calendar.all_day",
+    value: false,
+    name: "all_day",
+    type: "checkbox"
   },
   {
     label: "calendar.start",
@@ -62,10 +78,10 @@ const fieldItems: FieldItem[] = reactive([
     required: true
   },
   {
-    label: "calendar.all_day",
-    value: false,
-    name: "all_day",
-    type: "checkbox"
+    label: "calendar.recurrence",
+    value: "none",
+    name: "recurrence",
+    type: "text"
   },
   {
     label: "calendar.location",
@@ -80,15 +96,9 @@ const fieldItems: FieldItem[] = reactive([
     type: "textarea"
   }
 ]);
-const buttonItems: ButtonItem[] = [
-  { text: "create", type: "submit", action: "create" },
-  { text: "cancel", type: "button", action: "cancel"}
-];
-const buttonItems_eventAction: ButtonItem[] = [
-  { text: "edit", type: "button", action: "edit_eventAction" },
-  { text: "delete", type: "button", action: "delete_eventAction" },
-  { text: "cancel", type: "button", action: "cancel"}
-];
+onMounted(async() => {
+  await loadEvents();
+});
 const handleOpenNewEventEditor = () => {
   showNewEventEditor.value = true;
 };
@@ -129,10 +139,10 @@ const handleOnClick = async(event: string) => {
     case "delete_eventAction":
       const result = await rmEvent(currentEvent.value);
       if (result === 204) showSuccessToast("delete event successfully.");
+      await loadEvents();
   };
   showNewEventEditor.value = false;
   showEventAction.value = false;
-  await loadEvents();
 };
 
 watch(
@@ -153,6 +163,20 @@ watch(
   },
   { immediate: true }
 );
+watch(
+  () => mainStore.locale,
+  (newVal) => {
+    switch(newVal) {
+      case "tw":
+        calendaroperations.value.locale = twLocale;
+        break;
+      case "en":
+        calendaroperations.value.locale = enLocale;
+        break;
+    }
+    
+  }
+)
 
 </script>
 

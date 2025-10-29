@@ -3,6 +3,7 @@ import type { ButtonType } from 'vant';
 
 const props = defineProps<{
   type: string,
+  id?: string,
   name?: string
   club_role?: string
   birth?: string
@@ -30,7 +31,7 @@ const onClick = (event: string) => {
       emit("edit", "edit");
       break;
     case "delete":
-      emit("delete", "delete");
+      emit("delete", props.id);
       break;
   }
 };

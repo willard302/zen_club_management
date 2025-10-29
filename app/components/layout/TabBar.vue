@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { navItem } from '~/types/data.types';
 const mainStore = useMainStore();
-const home = { label: 'home', path: '/', icon: ['fas', 'house'] };
+const home = { label: 'home', path: '/home', icon: ['fas', 'house'] };
 const members = { label: 'members', path: '/members', icon: ['fas', 'id-card'] };
 const calendar = { label: 'calendar', path: '/calendar', icon: ['fas', 'calendar-days'] };
 const profile = { label: 'profile', path: '/profile', icon: ['fas', 'user'] };

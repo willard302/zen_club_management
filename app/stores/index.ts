@@ -5,7 +5,8 @@ export const useMainStore = defineStore('main', {
     isAuthenticated: true,
     user: null,
     tabBarActive: 'home',
-    defaultAvatar: "https://vvbtzvedcvhxibozbryz.supabase.co/storage/v1/object/public/icc_avatar/default_avatar.png"
+    defaultAvatar: "https://vvbtzvedcvhxibozbryz.supabase.co/storage/v1/object/public/icc_avatar/default_avatar.png",
+    locale: 'tw',
   }),
   getters: {
     avatarUrl: (state) => state.user?.avatar_url ?? state.defaultAvatar
@@ -19,6 +20,9 @@ export const useMainStore = defineStore('main', {
     },
     setTabBarActive(active: string){
       this.tabBarActive = active;
+    },
+    setLocale(locale: string) {
+      this.locale = locale
     },
     initAuth() {
       this.isAuthenticated = false;

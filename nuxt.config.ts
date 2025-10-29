@@ -9,6 +9,15 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   components: true,
+  app: {
+    head: {
+      title: "Zen Club Management",
+      meta: [
+        {name: "viewport", content: "width=device-width, initial-scale=1"},
+        {name: "description", content: "這是一個社團管理系統，幫助幹部們盡可能最大化的同步社團資訊"}
+      ]
+    }
+  },
   modules: [
     '@nuxt/eslint',
     '@nuxt/image',
@@ -63,8 +72,8 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/auth/login',
       callback: '/auth/confirm',
-      exclude: ['/auth/register']
-    }
+      exclude: ['/auth/register'],
+    },
   },
   fontawesome: {
     icons: {

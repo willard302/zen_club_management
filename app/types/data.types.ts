@@ -5,18 +5,25 @@ export type MainStoreState = {
   isAuthenticated: boolean,
   user: UserRow | UserUpdate | null,
   tabBarActive: string,
-  defaultAvatar: string
+  defaultAvatar: string,
+  locale: string
 };
+
+interface fieldOption {
+  text: string,
+  value: string
+}
 
 export type FieldItem = {
   label: string;
-  value: string | number | boolean | null;
+  value: string | number | boolean;
   name: keyof EventsInsert | string,
   type: FieldType;
   placeholder?: string;
   required?: boolean;
   message?: string;
   autocomplete?: string;
+  options?: fieldOption[]
 };
 
 export type message = {
@@ -60,4 +67,9 @@ export type EventExtended = {
   priority: string;
   customId: number;
   metaData: EventExtendedMetaData
-}
+};
+
+export type Operation = {
+  name: string,
+  id: string
+};
