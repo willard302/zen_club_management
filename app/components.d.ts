@@ -17,7 +17,6 @@ declare module 'vue' {
     VanDropdownItem: typeof import('vant/es')['DropdownItem']
     VanDropdownMenu: typeof import('vant/es')['DropdownMenu']
     VanField: typeof import('vant/es')['Field']
-    VanFloatingBubble: typeof import('vant/es')['FloatingBubble']
     VanForm: typeof import('vant/es')['Form']
     VanIcon: typeof import('vant/es')['Icon']
     VanList: typeof import('vant/es')['List']
@@ -30,5 +29,6 @@ declare module 'vue' {
     VanTabbar: typeof import('vant/es')['Tabbar']
     VanTabbarItem: typeof import('vant/es')['TabbarItem']
     VanTag: typeof import('vant/es')['Tag']
+    VanUploader: typeof import('vant/es')['Uploader']
   }
 }
