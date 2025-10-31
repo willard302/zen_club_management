@@ -4,9 +4,9 @@ import type { ButtonItem, FieldItem } from '~/types/data.types';
 const props = defineProps<{
   fieldItems?: FieldItem[],
   buttonItems?: ButtonItem[],
-  customClass?: string
+  customClass?: string,
+  buttonClass?: string
 }>();
-
 const emit = defineEmits(['submit', 'button']);
 const fields = ref(props.fieldItems);
 const handleOnClick = (event: ButtonItem) => {
@@ -21,7 +21,17 @@ const handleOnClick = (event: ButtonItem) => {
     <van-cell-group inset>
       <template v-for="(field, fieldIdx) in fields" :key="fieldIdx">
         <van-field
-          v-if="['text', 'number', 'password'].includes(field.type)"
+          v-if="field.type === 'checkbox'"
+          :type="field.type"
+          :name="field.name"
+          :label="$t(field.label)"
+        >
+          <template v-if="field.type === 'checkbox'" #input>
+            <van-switch v-model="field.value" />
+          </template>
+        </van-field>
+        <van-field
+          v-else
           :type="field.type"
           v-model="field.value as string | number | undefined"
           :name="field.name"
@@ -33,20 +43,11 @@ const handleOnClick = (event: ButtonItem) => {
           }]"
           :input-attrs="{ autocomplete: field.autocomplete }" 
         />
-        <van-field
-          v-else-if="field.type === 'checkbox'"
-          :type="field.type"
-          :name="field.name"
-          :label="$t(field.label)"
-        >
-          <template v-if="field.type === 'checkbox'" #input>
-            <van-switch v-model="field.value" />
-          </template>
-        </van-field>
+        
       </template>
       
     </van-cell-group>
-    <div v-if="props.buttonItems" class="button__menu">
+    <div v-if="props.buttonItems" :class="['button__menu', props.buttonClass]">
       <van-button 
         v-for="(btnItem, btnIdx) in props.buttonItems"
         :key="btnIdx"
@@ -76,13 +77,12 @@ const handleOnClick = (event: ButtonItem) => {
     max-width: 80%;
   }
 }
-.calendar, .members {
-  .button__menu {
-    display: flex;
 
-    .van-button {
-      width: 40%;
-    }
+.d-flex-40 {
+  display: flex;
+ 
+  .van-button {
+    width: 40%;
   }
-} 
+}
 </style>

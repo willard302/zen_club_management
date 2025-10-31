@@ -38,7 +38,8 @@ export default {
     title: "Title",
     list: "List",
     location: "Location",
-    recurrence: "Recurrence"
+    recurrence: "Recurrence",
+    new_event: "New Event"
   },
   locale: {
     en: 'EN',

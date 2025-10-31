@@ -54,6 +54,61 @@ export const useConverter = () => {
       }
     }
   };
+
+  const calendarToDbEvent = (event: EventInput): EventsInsert => {
+    return {
+      id: event.id,
+      title: event.title,
+      start_at: String(event.start),
+      end_at: String(event.end),
+      all_day: event.allDay,
+      color: event.backgroundColor,
+      location: event.extendedProps?.location,
+      description: event.extendedProps?.description,
+      created_at: event.extendedProps?.created_at,
+      created_by: event.extendedProps?.created_by,
+      participants: event.extendedProps?.participants,
+      recurrence: event.extendedProps?.recurrence
+    };
+  };
+
+  const calendarToFields = (event: EventsInsert): FieldItem[] => {
+    const fields: FieldItem[] = [];
+    const eventObj = Object.getOwnPropertyDescriptors(event)._def?.value;
+
+    for (const [key, value] of Object.entries(eventObj)) {
+      console.log(`${key}:  ${value}`)
+      switch(key) {
+        case "start_at":
+          fields.push({
+            label: key,
+            value: String(value),
+            name: key,
+            type: 'datetime-local'
+          });
+          break;
+        case "end_at":
+          fields.push({
+            label: key,
+            value: String(value),
+            name: key,
+            type: 'datetime-local' 
+          });
+          break;
+        default:
+          fields.push({
+            label: key,
+            value: String(value),
+            name: key, 
+            type: 'text'
+          });
+          break;
+      };
+
+      console.log(fields)
+    }
+    return fields;
+  }
   
   const dateToString = (timestamp: number, withTime: boolean) => {
     const date = new Date(timestamp);
@@ -76,6 +131,8 @@ export const useConverter = () => {
     fieldsToDatabase,
     fieldsToDbEvents,
     dbToCalendarEvent,
-    dateToString
+    dateToString,
+    calendarToDbEvent,
+    calendarToFields
   }
 }

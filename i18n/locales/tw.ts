@@ -37,7 +37,8 @@ export default {
     title: "活動標題",
     list: "列表",
     location: "活動地點",
-    recurrence: "重複事件"
+    recurrence: "重複事件",
+    new_event: "新增活動"
   },
   locale: {
     en: '英',

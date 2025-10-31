@@ -164,6 +164,7 @@ const handleOnClick = async(event: string) => {
         custom-class="members" 
         :field-items="fieldItems"
         :button-items="buttonItems"
+        button-class="d-flex-40"
         @submit="onSubmit"
         @button="handleOnClick"
       />
