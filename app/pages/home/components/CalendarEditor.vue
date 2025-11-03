@@ -32,7 +32,7 @@ const handlOnClick = (action:string) => emit('button', action)
   >
     <div class="calendar-editor">
       <h3 v-if="props.title" class="calendar-editor__title">
-        {{ $t(props.title) }}
+        {{ props.title }}
       </h3>
       <FieldForm 
         custom-class="calendar"
