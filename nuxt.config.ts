@@ -2,7 +2,7 @@
 import Components from 'unplugin-vue-components/vite';
 import { VantResolver } from 'unplugin-vue-components/resolvers';
 export default defineNuxtConfig({
-  ssr: false,
+  ssr: true,
   imports: {
     dirs: ['app/composables']
   },

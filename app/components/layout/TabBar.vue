@@ -11,16 +11,18 @@ const navItems: navItem[] = [home, members, calendar, profile];
 </script>
 
 <template>
-  <van-tabbar v-model="mainStore.tabBarActive">
-    <van-tabbar-item
-      v-for="(navItem, navIdx) in navItems"
-      :key="navIdx"
-      :name="navItem.label"
-      :to="navItem.path"
-    >
-      <font-awesome :icon="navItem.icon" />
-    </van-tabbar-item>
-  </van-tabbar>
+  <client-only>
+    <van-tabbar v-model="mainStore.tabBarActive">
+      <van-tabbar-item
+        v-for="(navItem, navIdx) in navItems"
+        :key="navIdx"
+        :name="navItem.label"
+        :to="navItem.path"
+      >
+        <font-awesome :icon="navItem.icon" />
+      </van-tabbar-item>
+    </van-tabbar>
+  </client-only>
 </template>
 
 <style scoped lang="scss">
