@@ -37,7 +37,7 @@ const handleLogout = async () => {
   showSuccessToast({
     message: 'logout success!'
   });
-  setTimeout(() => router.push('/auth'), 1000)
+  setTimeout(() => router.push('/auth/login'), 1000)
 };
 </script>
 
