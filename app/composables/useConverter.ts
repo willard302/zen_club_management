@@ -77,7 +77,7 @@ export const useConverter = () => {
     const eventObj = Object.getOwnPropertyDescriptors(event)._def?.value;
 
     for (const [key, value] of Object.entries(eventObj)) {
-      console.log(`${key}:  ${value}`)
+      // console.log(`${key}:  ${value}`)
       switch(key) {
         case "start_at":
           fields.push({
@@ -105,7 +105,7 @@ export const useConverter = () => {
           break;
       };
 
-      console.log(fields)
+      // console.log(fields)
     }
     return fields;
   }

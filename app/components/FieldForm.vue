@@ -18,7 +18,7 @@ const handleOnClick = (event: ButtonItem) => {
 
 <template>
   <van-form :class="props.customClass">
-    <van-cell-group inset>
+    <van-cell-group v-if="fields" inset>
       <template v-for="(field, fieldIdx) in fields" :key="fieldIdx">
         <van-field
           v-if="field.type === 'checkbox'"

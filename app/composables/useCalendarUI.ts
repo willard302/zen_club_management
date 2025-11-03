@@ -5,7 +5,7 @@ export const useCalendarUI = () => {
   const showEventAction = ref(false);
   const currentEvent = ref("");
   const events = ref<EventInput[]>([]);
-  const _thisEvent = ref<EventInput>({});
+  const event = ref<EventInput>({});
 
   const { getEvents, rmEvent } = useDataBase();
   const { dbToCalendarEvent, calendarToDbEvent, calendarToFields } = useConverter();
@@ -21,10 +21,7 @@ export const useCalendarUI = () => {
   };
 
   const handleEventClick = (info: any) => {
-    console.log(info.event.start)
-    // console.log(calendarToDbEvent(info.event))
-    // console.log(_thisEvent.value)
-    console.log(calendarToFields(info.event))
+    event.value = calendarToFields(info.event);
     showEventAction.value = true;
     currentEvent.value = info.event.id;
   };
@@ -37,6 +34,7 @@ export const useCalendarUI = () => {
   };
 
   return {
+    event,
     events,
     showNewEventEditor,
     showEventAction,
