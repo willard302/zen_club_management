@@ -3,5 +3,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
   if (to.fullPath === '/') {
     return navigateTo('/home')
   };
-  console.log(to.path.includes(mainStore.tabBarActive))
+  const isTabBarCorrect = to.path.includes(mainStore.tabBarActive);
+  if (!isTabBarCorrect) {
+    mainStore.setTabBarActive(to.href.split('/').join(''));
+  };
 })
