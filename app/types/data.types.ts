@@ -1,4 +1,4 @@
-import type { EventsInsert, UserRow, UserUpdate } from "./supabase";
+import type { EventsInsert, FinancesInsert, FinancesRow, UserRow, UserUpdate } from "./supabase";
 import type { ButtonNativeType, FieldType } from "vant";
 
 export type MainStoreState = {
@@ -8,6 +8,10 @@ export type MainStoreState = {
   defaultAvatar: string,
   locale: string
 };
+
+export type FinanceStoreState = {
+  records: FinancesInsert[]
+}
 
 interface fieldOption {
   text: string,

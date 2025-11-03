@@ -30,6 +30,11 @@ export type EventsRow = Events['Row'];
 export type EventsInsert = Events['Insert'];
 export type EventsUpdate = Events['Update'];
 
+type Finances = Database['public']['Tables']['finance_record'];
+export type FinancesRow = Finances['Row'];
+export type FinancesInsert = Finances['Insert'];
+export type FinancesUpdate = Finances['Update'];
+
 type Enums = Constants['public']['Enums']
 export type Role = Enums['club_role'];
 export type Attendance = Enums['attendance_status'];

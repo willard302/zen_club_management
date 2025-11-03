@@ -128,6 +128,39 @@ export type Database = {
         }
         Relationships: []
       }
+      finance_record: {
+        Row: {
+          accountant: string
+          amount: number
+          category: string
+          date: string
+          id: string
+          note: string
+          payee: string
+          type: string
+        }
+        Insert: {
+          accountant?: string
+          amount?: number
+          category?: string
+          date?: string
+          id?: string
+          note?: string
+          payee?: string
+          type?: string
+        }
+        Update: {
+          accountant?: string
+          amount?: number
+          category?: string
+          date?: string
+          id?: string
+          note?: string
+          payee?: string
+          type?: string
+        }
+        Relationships: []
+      }
       member_status: {
         Row: {
           contact_date: string | null
