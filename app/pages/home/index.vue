@@ -21,11 +21,12 @@ const buttonItems_newEvent: ButtonItem[] = [
   { text: "cancel", type: "button", action: "cancel"}
 ];
 const buttonItems_eventAction: ButtonItem[] = [
-  { text: "edit", type: "button", to: "/calendar/editor" },
+  { text: "edit", type: "button", action: "edit_eventAction" },
   { text: "delete", type: "button", action: "delete_eventAction" },
   { text: "cancel", type: "button", action: "cancel"}
 ];
 const selectEventTitle = ref("");
+
 const fieldItems: FieldItem[] = reactive([
   {
     label: "calendar.title",
@@ -123,8 +124,11 @@ watch(
   { immediate: true }
 );
 watch(event, (newVal) => {
-  selectEventTitle.value = newVal.find((val:Partial<FieldItem>) => val.name === 'title').value
-})
+  fieldItems.forEach((f: FieldItem) => {
+    f.value = newVal.find(v => v.name === f.name)?.value || "";
+  });
+  showEventAction.value = true;
+});
 
 
 </script>
