@@ -3,10 +3,10 @@ import type { navItem } from '~/types/data.types';
 const mainStore = useMainStore();
 const home = { label: 'home', path: '/home', icon: ['fas', 'house'] };
 const members = { label: 'members', path: '/members', icon: ['fas', 'id-card'] };
-const calendar = { label: 'calendar', path: '/calendar', icon: ['fas', 'calendar-days'] };
+const finance = { label: 'finance', path: '/finance', icon: ['fas', 'money-check-dollar'] };
 const profile = { label: 'profile', path: '/profile', icon: ['fas', 'user'] };
 
-const navItems: navItem[] = [home, members, calendar, profile];
+const navItems: navItem[] = [home, members, finance, profile];
 
 </script>
 
