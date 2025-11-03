@@ -94,6 +94,7 @@ const loadMembers = async() => {
   if (members && members.length !== 0) {
     contacts.value = members;
   };
+  finished.value = true;
 };
 
 const handleOpenNewPanel = () => {
