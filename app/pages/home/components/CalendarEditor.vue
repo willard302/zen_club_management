@@ -2,13 +2,23 @@
 import type { ButtonItem, FieldItem } from '~/types/data.types';
 
 const props = defineProps<{
-  show: boolean,
+  modelValue: boolean,
   fieldItems?: FieldItem[],
   buttonClass?: string,
-  buttonItems: ButtonItem[],
+  buttonItems?: ButtonItem[],
   title?: string
 }>();
-const emit = defineEmits(['update:show', 'submit', 'button']);
+const emit = defineEmits(['update:modelValue', 'submit', 'button']);
+
+const internalShow = ref(props.modelValue);
+watch(
+  () => props.modelValue,
+  (newVal) => internalShow.value = newVal
+);
+watch(internalShow, (newVal) => {
+  emit('update:modelValue', newVal);
+})
+
 const handleSubmit = () => emit('submit');
 const handlOnClick = (action:string) => emit('button', action)
 
@@ -16,7 +26,7 @@ const handlOnClick = (action:string) => emit('button', action)
 
 <template>
   <van-popup
-    v-model:show="props.show"
+    v-model:show="internalShow"
     position="bottom"
     round
   >
