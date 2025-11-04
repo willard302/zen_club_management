@@ -72,7 +72,7 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/auth/login',
       callback: '/auth/confirm',
-      exclude: ['/auth/register'],
+      exclude: ['/auth/register']
     },
   },
   fontawesome: {
@@ -83,5 +83,8 @@ export default defineNuxtConfig({
   },
   piniaPluginPersistedstate: {
     storage: 'sessionStorage'
+  },
+  vant: {
+    defaultLocale: 'zh-TW'
   }
 })
