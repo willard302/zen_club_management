@@ -73,7 +73,7 @@ const financialType = (type: string) => {
           :key="button.text"
           :type="button.type"
           :text="button.text"
-          size="small"
+          size="normal"
           square
           @click="onClick(button.text)"
         >

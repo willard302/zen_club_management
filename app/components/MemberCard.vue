@@ -10,7 +10,7 @@ const props = defineProps<{
   club_group?: string
   department?: string
 }>();
-const emit = defineEmits(['add', 'edit', 'delete']);
+const emit = defineEmits(['edit', 'delete']);
 
 interface button {
   text: string
@@ -24,9 +24,6 @@ const buttons = ref<button[]>([
 
 const onClick = (event: string) => {
   switch(event) {
-    case "add":
-      emit("add", "add");
-      break;
     case "edit":
       emit("edit", "edit");
       break;
@@ -47,23 +44,8 @@ const roleType = (role:string) => {
 </script>
 
 <template>
-  <van-cell 
-    v-if="props.type === 'add'" 
-    class="card__header add" 
-    is-link 
-    @click="onClick('add')"
-  >
-    <template #title>
-      <div class="custom__title">
-        <font-awesome class="icon" :icon="['fas', 'square-plus']" />
-        <div class="label">{{ "新增社員" }}</div>
-      </div>
-    </template>
-  </van-cell>
-  <van-swipe-cell 
-    v-else-if="props.type === 'edit'"
-  >
-    <div class="member__card edit">
+  <van-swipe-cell>
+    <div class="member__card">
       <div class="card__header">
         <div class="name">{{ name }}</div>
         <van-tag v-if="club_role" :type="roleType(club_role)" plain>{{ club_role }}</van-tag>
@@ -83,7 +65,7 @@ const roleType = (role:string) => {
           :key="button.text"
           :type="button.type"
           :text="button.text"
-          size="small"
+          size="normal"
           square
           @click="onClick(button.text)"
         >
@@ -108,10 +90,6 @@ const roleType = (role:string) => {
   font-weight: 600;
   margin-bottom: 6px;
 
-  &.add {
-    --van-cell-horizontal-padding: 4px;
-  }
-
   .name {
     margin-right: 20px;
   }
@@ -128,6 +106,7 @@ const roleType = (role:string) => {
 }
 .card__footer {
   height: 100%;
+  display: flex;
 
   .van-button {
     height: 100%;

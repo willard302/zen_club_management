@@ -14,7 +14,6 @@ const messages: message[] = [
 watch(
   () => mainStore.locale,
   (newLocale) => {
-    console.log(newLocale)
     switch(newLocale) {
       case 'tw':
         setLocale('tw');

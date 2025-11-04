@@ -14,7 +14,8 @@ const fieldItems: FieldItem[] = reactive([
     type: "text",
     placeholder: "Hints.enter_mail",
     required: true,
-    message: 'Hints.enter_mail'
+    message: 'Hints.enter_mail',
+    autocomplete: "username"
   },
   {
     label: "password", 

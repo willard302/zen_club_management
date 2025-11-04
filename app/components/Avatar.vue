@@ -38,18 +38,18 @@ const onAfterRead = async (
 </script>
 
 <template>
-   <van-field name="uploader">
-      <template #input>
-        <van-uploader 
-          v-model="avatar_url"
-          :after-read="onAfterRead"
-          preview-size="160px"
-          :deletable="false"
-          :show-upload="false"
-          reupload
-        />
-      </template>
-    </van-field>
+  <van-field name="uploader">
+    <template #input>
+      <van-uploader 
+        v-model="avatar_url"
+        :after-read="onAfterRead"
+        preview-size="160px"
+        :deletable="false"
+        :show-upload="false"
+        reupload
+      />
+    </template>
+  </van-field>
 </template>
 
 <style scoped lang="scss">
