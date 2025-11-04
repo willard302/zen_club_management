@@ -48,10 +48,14 @@ export const useDataBase = () => {
     const {data, error} = await client
       .from("members")
       .insert(memberInfo)
+      .select('*')
     
-    if(error) throw new Error(`Error posting member: ${error}`);
+    if(error) {
+      console.error('Insert error: ', error);
+      throw new Error(`Error inserting member: ${JSON.stringify(error, null, 2)}`);
+    };
   
-    if(!data) return console.warn('No member insert.');
+    console.log('Insert success: ', data);
 
     return data;
   };
