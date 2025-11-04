@@ -10,6 +10,7 @@ export default {
   edit: "編輯",
   email: "電子信箱",
   gender: "性別",
+  grade: "年級",
   inviter: "接引人",
   login: "登入",
   logout: "登出",
@@ -23,7 +24,6 @@ export default {
   profile: "簡介",
   register: "註冊",
   role: "身份",
-  student_year: "年級",
   submit: "提交",
   user_data: "個人資料",
   username: "帳號",
@@ -39,6 +39,13 @@ export default {
     location: "活動地點",
     recurrence: "重複事件",
     new_event: "新增活動"
+  },
+  Grade: {
+    freshman: "大一",
+    sophomore: "大二",
+    junior: "大三",
+    senior: "大四",
+    graduate: "社青"
   },
   locale: {
     en: '英',
@@ -65,4 +72,17 @@ export default {
     select_city: "請選擇您的城市",
     select_birthdate: "請選擇您的出生日期"
   },
+  Role: {
+    admin: "管理員",
+    teacher: "師資",
+    counselor: "輔導員",
+    president: "社長",
+    vice_president: "副社長",
+    team_director: "家族長",
+    deputy_team_director: "傅家族長",
+    committee_member: "核心幹部",
+    member: "社員",
+    new_member: "新社員",
+    guest: "新人"
+  }
 }

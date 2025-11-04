@@ -10,6 +10,7 @@ export default {
   edit: "Edit",
   email: "Email",
   gender: "Gender",
+  grade: "Grade",
   inviter: "Inviter",
   login: "Login",
   logout: "Logout",
@@ -21,10 +22,8 @@ export default {
   password_confirm: "Confirm Password",
   phone: "Phone",
   profile: "Profile",
-  register:"",
-  roles: "Register",
-  
-  student_year: "Student Year",
+  register:"Register",
+  roles: "Roles",
   submit: "Submit",
   user_data: "User Data",
   username: "Username",
@@ -40,6 +39,13 @@ export default {
     location: "Location",
     recurrence: "Recurrence",
     new_event: "New Event"
+  },
+  Grade: {
+    freshman: "Freshman",
+    sophomore: "Sophomore",
+    junior: "Junior",
+    senior: "Senior",
+    graduate: "Graduate"
   },
   locale: {
     en: 'EN',
@@ -66,4 +72,17 @@ export default {
     select_city: "Please select your city",
     select_birthdate: "Please select your birthdate"
   },
+  Role: {
+    admin: "Admin",
+    teacher: "Teacher",
+    counselor: "Counselor",
+    president: "President",
+    vice_president: "Vice President",
+    team_director: "Team Director",
+    deputy_team_director: "Deputy Team Director",
+    committee_member: "Committee Member",
+    member: "Member",
+    new_member: "New Member",
+    guest: "Guest"
+  }
 }
