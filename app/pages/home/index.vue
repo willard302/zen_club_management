@@ -135,8 +135,6 @@ watch(event, (newVal) => {
 
 <template>
   <div class="calendar__container">
-    <client-only>
-
       <!-- FullCalendar -->
       <Calendar
         ref="calendarRef"
@@ -166,8 +164,6 @@ watch(event, (newVal) => {
         :title="selectEventTitle"
         @button="handleOnClick"
       />
-      
-    </client-only>
   </div>
 </template>
 <style lang="scss">

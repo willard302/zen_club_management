@@ -1,11 +1,14 @@
+<script setup lang="ts"></script>
 <template>
-  <div>
-    <LayoutHeader />
-    <main>
-      <slot />
-    </main>
-    <LayoutFooter />
-  </div>
+  <ClientOnly>
+    <div>
+      <LayoutHeader />
+      <main>
+        <slot />
+      </main>
+      <LayoutFooter />
+    </div>
+  </ClientOnly>
 </template>
 <style scoped>
 header {

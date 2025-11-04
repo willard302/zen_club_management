@@ -4,7 +4,7 @@ const mainStore = useMainStore();
 
 <template>
   <footer>
-    <LayoutTabBar v-if="mainStore.isAuthenticated" />
+    <LayoutTabBar v-if="mainStore.isAuthenticated === true" />
   </footer>
 </template>
 

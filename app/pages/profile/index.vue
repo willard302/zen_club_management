@@ -44,28 +44,24 @@ const handleLogout = async () => {
 <template>
   <div>
     <Avatar></Avatar>
-    <van-cell-group class="profile__header">
-      <div class="profile__heading">
-        <div class="name">{{ mainStore.user?.name }}</div>
-      </div>
-      <div class="profile__heading">
-        <div class="status">
-          <van-cell-group inset>
-            <van-field v-model="status" input-align="center" :disabled="!isEdit" />
-          </van-cell-group>
-          <van-button v-if="!isEdit" @click="handleToggleState()">
-            <client-only>
-              <font-awesome :icon="['fas', 'pen']" />
-            </client-only>
-          </van-button>
-          <van-button v-else @click="handleToggleState()">
-            <client-only>
-              <font-awesome :icon="['fas', 'check']" />
-            </client-only>
-          </van-button>
+      <van-cell-group class="profile__header">
+        <div class="profile__heading">
+          <div class="name">{{ mainStore.user?.name }}</div>
         </div>
-      </div>
-    </van-cell-group>
+        <div class="profile__heading">
+          <div class="status">
+            <van-cell-group inset>
+              <van-field v-model="status" input-align="center" :disabled="!isEdit" />
+            </van-cell-group>
+            <van-button v-if="!isEdit" @click="handleToggleState()">
+              <font-awesome :icon="['fas', 'pen']" />
+            </van-button>
+            <van-button v-else @click="handleToggleState()">
+              <font-awesome :icon="['fas', 'check']" />
+            </van-button>
+          </div>
+        </div>
+      </van-cell-group>
     <van-cell-group class="profile__content" inset>
       <van-cell 
         v-for="(item, idx) in lists" 

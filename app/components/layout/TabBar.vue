@@ -11,7 +11,7 @@ const navItems: navItem[] = [home, members, finance, profile];
 </script>
 
 <template>
-  <client-only>
+  <div>
     <van-tabbar v-model="mainStore.tabBarActive">
       <van-tabbar-item
         v-for="(navItem, navIdx) in navItems"
@@ -22,7 +22,7 @@ const navItems: navItem[] = [home, members, finance, profile];
         <font-awesome :icon="navItem.icon" />
       </van-tabbar-item>
     </van-tabbar>
-  </client-only>
+  </div>
 </template>
 
 <style scoped lang="scss">

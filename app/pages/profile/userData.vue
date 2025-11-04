@@ -113,8 +113,8 @@ const onConfirmGender = ({ selectedValues }: PickerConfirmEventParams) => {
       />
       <van-field 
         v-model="userInfo.student_years"
-        :label="$t('student_year')"
-        :placeholder="$t('Hints.enter_student_year')"
+        :label="$t('grade')"
+        :placeholder="$t('Hints.enter_grade')"
       />
     </van-cell-group>
     <van-space class="button__container">
