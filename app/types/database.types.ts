@@ -202,8 +202,11 @@ export type Database = {
           club_group: string
           club_role: Database["public"]["Enums"]["club_role"]
           created_at: string
+          created_by: string
           department: string
           email: string | null
+          grade: Database["public"]["Enums"]["grade"] | null
+          hierarchy: Database["public"]["Enums"]["hierarchy"]
           id: string
           instagram: string
           inviter: string
@@ -212,15 +215,17 @@ export type Database = {
           name: string
           phone: string
           student_id: string
-          student_year: Database["public"]["Enums"]["student_year"] | null
         }
         Insert: {
           birthday?: string
           club_group?: string
           club_role?: Database["public"]["Enums"]["club_role"]
           created_at?: string
+          created_by?: string
           department?: string
           email?: string | null
+          grade?: Database["public"]["Enums"]["grade"] | null
+          hierarchy?: Database["public"]["Enums"]["hierarchy"]
           id?: string
           instagram?: string
           inviter?: string
@@ -229,15 +234,17 @@ export type Database = {
           name?: string
           phone?: string
           student_id?: string
-          student_year?: Database["public"]["Enums"]["student_year"] | null
         }
         Update: {
           birthday?: string
           club_group?: string
           club_role?: Database["public"]["Enums"]["club_role"]
           created_at?: string
+          created_by?: string
           department?: string
           email?: string | null
+          grade?: Database["public"]["Enums"]["grade"] | null
+          hierarchy?: Database["public"]["Enums"]["hierarchy"]
           id?: string
           instagram?: string
           inviter?: string
@@ -246,7 +253,6 @@ export type Database = {
           name?: string
           phone?: string
           student_id?: string
-          student_year?: Database["public"]["Enums"]["student_year"] | null
         }
         Relationships: []
       }
@@ -262,7 +268,7 @@ export type Database = {
           phone: string
           role: Database["public"]["Enums"]["club_role"]
           status: string
-          student_years: Database["public"]["Enums"]["student_year"]
+          student_years: Database["public"]["Enums"]["grade"]
         }
         Insert: {
           avatar_url?: string
@@ -275,7 +281,7 @@ export type Database = {
           phone?: string
           role?: Database["public"]["Enums"]["club_role"]
           status?: string
-          student_years?: Database["public"]["Enums"]["student_year"]
+          student_years?: Database["public"]["Enums"]["grade"]
         }
         Update: {
           avatar_url?: string
@@ -288,7 +294,7 @@ export type Database = {
           phone?: string
           role?: Database["public"]["Enums"]["club_role"]
           status?: string
-          student_years?: Database["public"]["Enums"]["student_year"]
+          student_years?: Database["public"]["Enums"]["grade"]
         }
         Relationships: []
       }
@@ -314,7 +320,8 @@ export type Database = {
         | "new_member"
         | "guest"
       event_recurrence: "none" | "daily" | "weekly" | "monthly" | "yearly"
-      student_year: "freshman" | "sophomore" | "junior" | "senior" | "graduate"
+      grade: "freshman" | "sophomore" | "junior" | "senior" | "graduate"
+      hierarchy: "core_officers" | "officers" | "members" | "associate_members"
     }
     CompositeTypes: {
       event_extended: {
@@ -469,7 +476,8 @@ export const Constants = {
         "guest",
       ],
       event_recurrence: ["none", "daily", "weekly", "monthly", "yearly"],
-      student_year: ["freshman", "sophomore", "junior", "senior", "graduate"],
+      grade: ["freshman", "sophomore", "junior", "senior", "graduate"],
+      hierarchy: ["core_officers", "officers", "members", "associate_members"],
     },
   },
 } as const

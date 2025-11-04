@@ -1,5 +1,6 @@
 import type { Database, Constants } from "./database.types";
 import type { EventInput } from "@fullcalendar/core";
+import { Constants } from "~/types/database.types";
 
 declare module '#supabase/schema' {
     interface DatabaseDefinition extends Database {};
@@ -38,4 +39,4 @@ export type FinancesUpdate = Finances['Update'];
 type Enums = Constants['public']['Enums']
 export type Role = Enums['club_role'];
 export type Attendance = Enums['attendance_status'];
-export type StudentYear = Enums['student_year'];
+export type Grade = Enums['grade'];

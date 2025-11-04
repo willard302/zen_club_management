@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ButtonItem, FieldItem } from '~/types/data.types';
+const { t } = useI18n();
 
 const props = defineProps<{
   fieldItems?: FieldItem[],
@@ -7,12 +8,46 @@ const props = defineProps<{
   customClass?: string,
   buttonClass?: string
 }>();
+
 const emit = defineEmits(['submit', 'button']);
+
 const fields = ref(props.fieldItems);
+
+const showPicker = ref(false);
+const pickerOptions = ref<any[]>([]);
+const pickerField = ref<FieldItem | null>(null);
+
 const handleOnClick = (event: ButtonItem) => {
   if (event.to) return navigateTo(event.to);
   if (event.type === 'submit') return emit('submit', fields.value);
   if (event.action) return emit('button', event.action);
+};
+
+const openPicker = (field: FieldItem) => {
+  switch(field.name) {
+    case "club_role":
+      pickerOptions.value = field.options?.map(f => ({text: f.text, value: t(`Role.${f.value}`)})) ?? [];
+      break;
+    case "grade":
+      pickerOptions.value = field.options?.map(f => ({text: f.text, value: t(`Grade.${f.value}`)})) ?? [];
+      break;
+  };
+  pickerField.value = field;
+  showPicker.value = true;
+};
+
+const onConfirm = (
+  {selectedValues}: 
+  {selectedValues: string[]}
+) => {
+  if (!pickerField.value) return;
+  pickerField.value.value = selectedValues[0] ?? '';
+  console.log('selectedValues', selectedValues);
+  showPicker.value = false;
+};
+
+const onCancel = () => {
+  showPicker.value = false;
 };
 </script>
 
@@ -20,6 +55,7 @@ const handleOnClick = (event: ButtonItem) => {
   <van-form :class="props.customClass">
     <van-cell-group v-if="fields" inset>
       <template v-for="(field, fieldIdx) in fields" :key="fieldIdx">
+
         <van-field
           v-if="field.type === 'checkbox'"
           :type="field.type"
@@ -30,8 +66,20 @@ const handleOnClick = (event: ButtonItem) => {
             <van-switch v-model="field.value" />
           </template>
         </van-field>
+
+        <van-field 
+          v-else-if="field.options" 
+          is-link
+          readonly
+          :name="field.name"
+          :label="$t(field.label)"
+          :placeholder="field.placeholder"
+          :model-value="String(field.value)"
+          @click="openPicker(field)"
+        />
+
         <van-field
-          v-else
+          v-else-if="field.type"
           :type="field.type"
           v-model="field.value as string | number | undefined"
           :name="field.name"
@@ -41,12 +89,19 @@ const handleOnClick = (event: ButtonItem) => {
             required: field.required,
             message: field.message ? $t(field.message) : ''
           }]"
-          :input-attrs="{ autocomplete: field.autocomplete }" 
+          :autocomplete="field.autocomplete"
         />
-        
       </template>
-      
     </van-cell-group>
+
+    <van-popup v-model:show="showPicker" round position="bottom">
+      <van-picker 
+        :columns="pickerOptions"
+        @confirm="onConfirm"
+        @cancel="onCancel"
+      />
+    </van-popup>
+
     <div v-if="props.buttonItems" :class="['button__menu', props.buttonClass]">
       <van-button 
         v-for="(btnItem, btnIdx) in props.buttonItems"

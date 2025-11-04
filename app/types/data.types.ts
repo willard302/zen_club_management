@@ -13,7 +13,7 @@ export type FinanceStoreState = {
   records: FinancesInsert[]
 }
 
-interface fieldOption {
+export type FieldOption = {
   text: string,
   value: string
 }
@@ -22,12 +22,12 @@ export type FieldItem = {
   label: string;
   value: string | number | boolean;
   name: keyof EventsInsert | string,
-  type: FieldType;
+  type?: FieldType;
   placeholder?: string;
   required?: boolean;
   message?: string;
   autocomplete?: string;
-  options?: fieldOption[]
+  options?: FieldOption[]
 };
 
 export type message = {

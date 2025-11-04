@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import MemberCard from '~/components/MemberCard.vue';
+import { role_options, grade_options } from '~/data/data';
 import type { ButtonItem, FieldItem } from '~/types/data.types';
-import type { MemebersInsert, Role } from '~/types/supabase';
+import type { MemebersInsert } from '~/types/supabase';
 const { fieldsToDatabase } = useConverter();
 const { getMembers, insertMember, rmMember } = useDataBase();
 const mainStore = useMainStore();
+const { t } = useI18n();
 onMounted(async() => {
   await loadMembers();
 });
@@ -25,7 +27,7 @@ const fieldItems: FieldItem[] = reactive([
     label: "birthday",
     value: "", 
     name: "birthday", 
-    type: "datetime-local",
+    type: "date",
     required: false,
     message: 'Hints.enter_birthday'
   },
@@ -33,22 +35,9 @@ const fieldItems: FieldItem[] = reactive([
     label: "role",
     value: "", 
     name: "club_role", 
-    type: "text",
     required: true,
     message: 'Hints.enter_role',
-    options: [
-      {text: "admin", value: "admin"},
-      {text: "teacher", value: "teacher"},
-      {text: "counselor", value: "counselor"},
-      {text: "president", value: "president"},
-      {text: "vice_president", value: "vice_president"},
-      {text: "team_director", value: "team_director"},
-      {text: "deputy_team_director", value: "deputy_team_director"},
-      {text: "committee_member", value: "committee_member"},
-      {text: "member", value: "memeber"},
-      {text: "new_member", value: "new_member"},
-      {text: "guest", value: "guest"}
-    ]
+    options: role_options.map(o => ({text: t(`Role.${o.text}`), value: o.value}))
   },
   { 
     label: "department",
@@ -59,12 +48,12 @@ const fieldItems: FieldItem[] = reactive([
     message: 'Hints.enter_department'
   },
   { 
-    label: "student_year",
+    label: "grade",
     value: "", 
-    name: "student_year", 
-    type: "text",
+    name: "grade", 
     required: false,
-    message: 'Hints.enter_student_year'
+    message: 'Hints.enter_student_year',
+    options: grade_options.map(o => ({text: t(`Grade.${o.text}`), value: o.value}))
   },
   {
     label: "email",
@@ -110,19 +99,11 @@ const onDelete = async(member_id: string) => {
   await loadMembers();
 };
 const onSubmit = async() => {
-  // const newMember: MemebersInsert = {
-  //   name: "Nico",
-  //   birthday: "1998/01/29",
-  //   inviter: mainStore.user?.id,
-  //   club_role: "member",
-  //   email: "test002@gmail.com",
-  //   department: "economist",
-  //   student_year: "freshman"
-  // };
-
-  // await insertMember(newMember)
-  const newMember = fieldsToDatabase(fieldItems);
-  console.log(newMember)
+  const newMember: MemebersInsert = fieldsToDatabase(fieldItems);
+  if (newMember) {
+    const result = await insertMember(newMember);
+  };
+  showNewMemberForm.value = false;
 };
 const handleOnClick = async(event: string) => {
   if (event === 'cancel') {
@@ -133,9 +114,6 @@ const handleOnClick = async(event: string) => {
 
 <template>
   <div>
-    <van-sticky :offset-top="46">
-      <MemberCard type="add" @add="handleOpenNewPanel" />
-    </van-sticky>
     <van-list
       v-model:loading="loading"
       :finished="finished"
@@ -156,6 +134,7 @@ const handleOnClick = async(event: string) => {
         @delete="onDelete"
       ></MemberCard>
     </van-list>
+    <van-floating-bubble icon="plus" @click="handleOpenNewPanel" />
     <van-popup 
       v-model:show="showNewMemberForm" 
       position="bottom"
