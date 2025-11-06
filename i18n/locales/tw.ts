@@ -65,7 +65,7 @@ export default {
     enter_birthday: "請輸入您的出生日期",
     enter_habit: "請輸入您的興趣",
     enter_location: "請輸入您的地點",
-    enter_student_year: "請輸入您的年級",
+    enter_grade: "請輸入您的年級",
     enter_inviter: "請輸入您的接引人",
     select_gender: "請選擇您的性別",
     select_country: "請選擇您的國家",

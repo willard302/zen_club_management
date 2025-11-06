@@ -65,7 +65,7 @@ export default {
     enter_birthdate: "Please enter your birthdate",
     enter_habit: "Please enter your habit",
     enter_location: "Please enter your location",
-    enter_student_year: "Please enter your student year",
+    enter_grade: "Please enter your student year",
     enter_inviter: "Please enter your inviter",
     select_gender: "Please select your gender",
     select_country: "Please select your country",
