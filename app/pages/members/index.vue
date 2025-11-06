@@ -4,7 +4,7 @@ import { role_options, grade_options } from '~/data/data';
 import type { ButtonItem, FieldItem } from '~/types/data.types';
 import type { MemebersInsert } from '~/types/supabase';
 const { fieldsToDatabase } = useConverter();
-const { getMembers, insertMember, rmMember } = useDataBase();
+const { getMember, getMembers, insertMember, rmMember } = useDataBase();
 const mainStore = useMainStore();
 const { t } = useI18n();
 onMounted(async() => {
@@ -14,6 +14,7 @@ onMounted(async() => {
 const loading = ref(false);
 const finished = ref(false);
 const showNewMemberForm = ref(false);
+const showMemberEditor = ref(false);
 const fieldItems: FieldItem[] = reactive([
   { 
     label: "name",
@@ -52,7 +53,7 @@ const fieldItems: FieldItem[] = reactive([
     value: "", 
     name: "grade", 
     required: false,
-    message: 'Hints.enter_student_year',
+    message: 'Hints.enter_grade',
     options: grade_options.map(o => ({text: t(`Grade.${o.text}`), value: o.value}))
   },
   {
@@ -89,8 +90,14 @@ const loadMembers = async() => {
 const handleOpenNewPanel = () => {
   showNewMemberForm.value = true;
 };
-const onEdit = (item: string) => {
+const handleOpenMemberEditor = () => {
+  showMemberEditor.value = true;
+};
+const onEdit = async(item: string) => {
   console.log("edit: ", item)
+  handleOpenMemberEditor();
+  const member = await getMember(item);
+  console.log("member: ", member)
 };
 const onDelete = async(member_id: string) => {
   const result = await rmMember(member_id);
@@ -102,13 +109,14 @@ const onSubmit = async() => {
   const newMember: MemebersInsert = fieldsToDatabase(fieldItems);
   if (newMember) {
     const result = await insertMember(newMember);
+    console.log("insert member result: ", result)
   };
   showNewMemberForm.value = false;
 };
 const handleOnClick = async(event: string) => {
   if (event === 'cancel') {
     showNewMemberForm.value = false
-  }
+  };
 };
 </script>
 
@@ -147,6 +155,18 @@ const handleOnClick = async(event: string) => {
         button-class="d-flex-40"
         @submit="onSubmit"
         @button="handleOnClick"
+      />
+    </van-popup>
+    <van-popup
+      v-model:show="showMemberEditor"
+      position="bottom"
+      round
+    >
+      <FieldForm 
+        custom-class="member"
+        :button-items="buttonItems"
+        button-class="d-flex-40"
+
       />
     </van-popup>
   </div>

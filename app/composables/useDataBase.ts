@@ -21,6 +21,20 @@ export const useDataBase = () => {
     return data;
   };
 
+  const getMember = async(memberId: string) => {
+    const {data, error} = await client
+      .from("members")
+      .select("*")
+      .eq("id", memberId)
+      .maybeSingle()
+    
+    if(error) throw new Error(`Error fecthing member: ${error}`);
+
+    if(!data) throw new Error("No member found.");
+
+    return data;
+  };
+
   const getMembers = async() => {
     const {data, error} = await client
       .from("members")
@@ -108,6 +122,7 @@ export const useDataBase = () => {
   };
 
   return {
+    getMember,
     getMembers,
     getUser,
     getEvents,

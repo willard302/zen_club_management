@@ -8,7 +8,7 @@ export const useCalendarUI = () => {
   const event = ref<EventInput[]>([]);
 
   const { getEvents, rmEvent } = useDataBase();
-  const { dbToCalendarEvent, calendarToDbEvent, calendarToFields } = useConverter();
+  const { dbToCalendarEvent, calendarToFields } = useConverter();
 
   const loadEvents = async() => {
     showLoadingToast({message: "Loading..."});

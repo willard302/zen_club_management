@@ -4,7 +4,7 @@ import CalendarEditor from "./components/CalendarEditor.vue";
 import { useCalendarUI } from "~/composables/useCalendarUI";
 import type { ButtonItem, FieldItem } from "~/types/data.types";
 const { insertEvent } = useDataBase();
-const { fieldsToDbEvents, calendarToDbEvent } = useConverter();
+const { fieldsToDbEvents } = useConverter();
 const {
   event, 
   events, 

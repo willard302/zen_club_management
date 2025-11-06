@@ -25,7 +25,7 @@ const buttons = ref<button[]>([
 const onClick = (event: string) => {
   switch(event) {
     case "edit":
-      emit("edit", "edit");
+      emit("edit", props.id);
       break;
     case "delete":
       emit("delete", props.id);
