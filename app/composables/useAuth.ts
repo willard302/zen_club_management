@@ -19,6 +19,7 @@ export const useAuth = () => {
   const logout = async() => {
     await client.auth.signOut();
     mainStore.initAuth();
+    navigateTo('/auth/login')
   };
 
   const register = async(username: string, password: string) => {
