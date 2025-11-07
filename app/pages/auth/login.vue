@@ -12,9 +12,9 @@ const fieldItems: FieldItem[] = reactive([
     value: 'test001@gmail.com', 
     name: "username", 
     type: "text",
-    placeholder: "Hints.enter_mail",
+    placeholder: "Hints.enter_email",
     required: true,
-    message: 'Hints.enter_mail',
+    message: 'Hints.enter_email',
     autocomplete: "username"
   },
   {
