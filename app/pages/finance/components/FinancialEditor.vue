@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useFinanceStore } from '~/stores/finance';
+import type { FinancesInsert } from '~/types/supabase';
 
 const financeStore = useFinanceStore();
 const type = ref<'income' | 'expense'>('income');
@@ -11,7 +11,13 @@ const showTypePicker = ref(false);
 const onTypeConfirm = (value: string) => {
   type.value = value as 'income' | 'expense';
   showTypePicker.value = false;
-}
+};
+
+const addRecord = (record: FinancesInsert) => {
+  console.log("add")
+  // records.push(record);
+  // saveToLocalStorage();
+};
 
 const onSubmit = () => {
   if (!amount.value || !category.value) {
@@ -19,7 +25,7 @@ const onSubmit = () => {
     return;
   };
 
-  financeStore.addRecord({
+  addRecord({
     id: crypto.randomUUID(),
     type: type.value,
     category: category.value,

@@ -1,4 +1,3 @@
-import { useLocalStorage } from "~/composables/useLocalStorage";
 import type { FinanceStoreState } from "~/types/data.types"
 import type { FinancesInsert } from "~/types/supabase";
 export const useFinanceStore = defineStore('finance', {
@@ -23,15 +22,17 @@ export const useFinanceStore = defineStore('finance', {
       this.saveToLocalStorage();
     },
     saveToLocalStorage() {
-      const {setItem} = useLocalStorage();
-      setItem('finance_records', this.records);
+      // const {setItem} = useLocalStorage();
+      // setItem('finance_records', this.records);
+      console.log('save...')
     },
     loadFromLocalStorage() {
-      const { getItem } = useLocalStorage();
-      const data = getItem('finance_records');
-      if (data) {
-        this.records = data
-      }
+      // const { getItem } = useLocalStorage();
+      // const data = getItem('finance_records');
+      // if (data) {
+      //   this.records = data
+      // }
+      console.log('load...')
     }
   }
 })
