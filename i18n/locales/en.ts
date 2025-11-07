@@ -58,7 +58,7 @@ export default {
     enter_comment: "Please input your comment.",
     enter_current_password: "Please input your current password.",
     enter_department: "Please input your department.",
-    enter_mail: "Please input your email.",
+    enter_email: "Please input your email.",
     enter_new_password: "Please input your new password",
     enter_birthday: "Please input your birthday.",
     enter_new_password_2: "Please input your new password again",

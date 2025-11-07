@@ -58,7 +58,7 @@ export default {
     enter_comment: "請輸入留言",
     enter_current_password: "請輸入您現在的密碼",
     enter_department: "請輸入您的科系",
-    enter_mail: "請輸入您的信箱",
+    enter_email: "請輸入您的信箱",
     enter_new_password: "請輸入您的新密碼",
     enter_new_password_2: "請再次輸入您的新密碼",
     enter_role: "請輸入您的身分",
