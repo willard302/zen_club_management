@@ -8,7 +8,7 @@ const mainStore = useMainStore()
       <main>
         <slot />
       </main>
-      <LayoutFooter v-if="mainStore.showTabBar" />
+      <LayoutFooter v-if="mainStore.showTabbar" />
     </div>
   </ClientOnly>
 </template>

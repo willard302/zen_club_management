@@ -7,7 +7,7 @@ export const useMainStore = defineStore('main', {
     tabBarActive: 'home',
     defaultAvatar: "https://vvbtzvedcvhxibozbryz.supabase.co/storage/v1/object/public/icc_avatar/default_avatar.png",
     locale: 'tw',
-    showTabBar: false
+    showTabbar: false
   }),
   getters: {
     avatarUrl: (state) => state.user?.avatar_url ?? state.defaultAvatar
@@ -15,6 +15,9 @@ export const useMainStore = defineStore('main', {
   actions: {
     setAuthenticated(value: boolean) {
       this.isAuthenticated = value;
+    },
+    setTabbar(value: boolean) {
+      this.showTabbar = value
     },
     setUser(user: UserRow | UserUpdate) {
       this.user = user;
@@ -27,7 +30,7 @@ export const useMainStore = defineStore('main', {
     },
     initAuth() {
       this.isAuthenticated = false;
-      this.showTabBar = false;
+      this.showTabbar = false;
       this.user = null;
     }
   },

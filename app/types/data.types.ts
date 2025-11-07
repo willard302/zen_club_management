@@ -7,7 +7,7 @@ export type MainStoreState = {
   tabBarActive: string
   defaultAvatar: string
   locale: string
-  showTabBar: boolean
+  showTabbar: boolean
 };
 
 export type FinanceStoreState = {

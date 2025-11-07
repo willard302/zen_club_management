@@ -13,26 +13,16 @@ export const useFinanceStore = defineStore('finance', {
         payee: '小明',
         type: 'income'
       }
-    ]
+    ],
+
   }),
   getters: {},
   actions: {
     addRecord(record: FinancesInsert) {
       this.records.push(record);
-      this.saveToLocalStorage();
     },
-    saveToLocalStorage() {
-      // const {setItem} = useLocalStorage();
-      // setItem('finance_records', this.records);
-      console.log('save...')
-    },
-    loadFromLocalStorage() {
-      // const { getItem } = useLocalStorage();
-      // const data = getItem('finance_records');
-      // if (data) {
-      //   this.records = data
-      // }
-      console.log('load...')
+    loadRecord() {
+      return this.records;
     }
   }
 })
