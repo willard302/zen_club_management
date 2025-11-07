@@ -24,7 +24,7 @@ export type ClubsUpdate = Clubs['Update'];
 type Memebers = Database['public']['Tables']['members'];
 export type MemebersRow = Memebers['Row'];
 export type MemebersInsert = Memebers['Insert'];
-export type MemebersUpdate = Memebers['Row'];
+export type MemebersUpdate = Memebers['Update'];
 
 type Events = Database['public']['Tables']['events'];
 export type EventsRow = Events['Row'];

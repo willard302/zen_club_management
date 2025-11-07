@@ -27,7 +27,7 @@ const buttonItems_eventAction: ButtonItem[] = [
 ];
 const selectEventTitle = ref("");
 
-const fieldItems: FieldItem[] = reactive([
+const fieldItems = reactive<FieldItem[]>([
   {
     label: "calendar.title",
     value: "",

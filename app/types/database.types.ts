@@ -198,13 +198,15 @@ export type Database = {
       }
       members: {
         Row: {
+          avatar_url: string
           birthday: string
           club_group: string
           club_role: Database["public"]["Enums"]["club_role"]
           created_at: string
           created_by: string
           department: string
-          email: string | null
+          email: string
+          gender: string
           grade: Database["public"]["Enums"]["grade"] | null
           hierarchy: Database["public"]["Enums"]["hierarchy"]
           id: string
@@ -217,13 +219,15 @@ export type Database = {
           student_id: string
         }
         Insert: {
+          avatar_url?: string
           birthday?: string
           club_group?: string
           club_role?: Database["public"]["Enums"]["club_role"]
           created_at?: string
           created_by?: string
           department?: string
-          email?: string | null
+          email?: string
+          gender?: string
           grade?: Database["public"]["Enums"]["grade"] | null
           hierarchy?: Database["public"]["Enums"]["hierarchy"]
           id?: string
@@ -236,13 +240,15 @@ export type Database = {
           student_id?: string
         }
         Update: {
+          avatar_url?: string
           birthday?: string
           club_group?: string
           club_role?: Database["public"]["Enums"]["club_role"]
           created_at?: string
           created_by?: string
           department?: string
-          email?: string | null
+          email?: string
+          gender?: string
           grade?: Database["public"]["Enums"]["grade"] | null
           hierarchy?: Database["public"]["Enums"]["hierarchy"]
           id?: string

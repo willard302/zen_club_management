@@ -1,19 +1,21 @@
 <script setup lang="ts">
 definePageMeta({ title: 'user_data' });
+
 import type { PickerConfirmEventParams } from 'vant';
 import type { UserRow, UserUpdate } from '~/types/supabase';
+
 const mainStore = useMainStore();
 const router = useRouter();
 const { updateUser } = useDataBase();
 const { t } = useI18n();
 
-onMounted(async() => {
-  userInfo.value = mainStore.user as UserRow;
-})
-
 const isDisabled = ref(true);
 const showPickerGender = ref(false);
 const showPickerDate = ref(false);
+
+onMounted(async() => {
+  userInfo.value = mainStore.user as UserRow;
+});
 
 const userInfo = ref<UserRow | UserUpdate>({
   avatar_url: '',
@@ -104,7 +106,7 @@ const onConfirmGender = ({ selectedValues }: PickerConfirmEventParams) => {
       <van-field 
         v-model="userInfo.email"
         :label="$t('email')"
-        :placeholder="$t('Hints.enter_mail')"
+        :placeholder="$t('Hints.enter_email')"
       />
       <van-field 
         v-model="userInfo.department"
