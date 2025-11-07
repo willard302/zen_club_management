@@ -1,3 +1,4 @@
+import { useLocalStorage } from "~/composables/useLocalStorage";
 import type { FinanceStoreState } from "~/types/data.types"
 import type { FinancesInsert } from "~/types/supabase";
 export const useFinanceStore = defineStore('finance', {
@@ -15,30 +16,21 @@ export const useFinanceStore = defineStore('finance', {
       }
     ]
   }),
-  getters: {
-    totalIncome(){
-      this.records
-        .filter((r:FinancesInsert) => r.type === 'income')
-        // .reduce((a, b) => a + b.amount, 0)
-    },
-    totalExpense(){
-      this.records
-        .filter((r:FinancesInsert) => r.type === 'expense')
-        // .reduce((a, b) => a + b.amount, 0)
-    }
-  },
+  getters: {},
   actions: {
     addRecord(record: FinancesInsert) {
       this.records.push(record);
       this.saveToLocalStorage();
     },
     saveToLocalStorage() {
-      localStorage.setItem('finance_reocrds', JSON.stringify(this.records));
+      const {setItem} = useLocalStorage();
+      setItem('finance_records', this.records);
     },
     loadFromLocalStorage() {
-      const data = localStorage.getItem('finance_records');
+      const { getItem } = useLocalStorage();
+      const data = getItem('finance_records');
       if (data) {
-        this.records = JSON.parse(data)
+        this.records = data
       }
     }
   }

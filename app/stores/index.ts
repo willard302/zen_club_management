@@ -2,11 +2,12 @@ import type { MainStoreState } from "~/types/data.types";
 import type { UserRow, UserUpdate } from "~/types/supabase";
 export const useMainStore = defineStore('main', {
   state: (): MainStoreState => ({
-    isAuthenticated: true,
+    isAuthenticated: false,
     user: null,
     tabBarActive: 'home',
     defaultAvatar: "https://vvbtzvedcvhxibozbryz.supabase.co/storage/v1/object/public/icc_avatar/default_avatar.png",
     locale: 'tw',
+    showTabBar: false
   }),
   getters: {
     avatarUrl: (state) => state.user?.avatar_url ?? state.defaultAvatar
@@ -26,6 +27,7 @@ export const useMainStore = defineStore('main', {
     },
     initAuth() {
       this.isAuthenticated = false;
+      this.showTabBar = false;
       this.user = null;
     }
   },

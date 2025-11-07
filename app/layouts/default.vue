@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const mainStore = useMainStore()
+</script>
 <template>
   <ClientOnly>
     <div>
@@ -6,7 +8,7 @@
       <main>
         <slot />
       </main>
-      <LayoutFooter />
+      <LayoutFooter v-if="mainStore.showTabBar" />
     </div>
   </ClientOnly>
 </template>

@@ -1,10 +1,8 @@
-<script setup lang="ts">
-const mainStore = useMainStore();
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <footer>
-    <LayoutTabBar v-if="mainStore.isAuthenticated === true" />
+    <LayoutTabBar />
   </footer>
 </template>
 
