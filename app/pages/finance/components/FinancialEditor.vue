@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { FinancesInsert } from '~/types/supabase';
-
 const financeStore = useFinanceStore();
 const type = ref<'income' | 'expense'>('income');
 const category = ref('');
@@ -13,19 +11,13 @@ const onTypeConfirm = (value: string) => {
   showTypePicker.value = false;
 };
 
-const addRecord = (record: FinancesInsert) => {
-  console.log("add")
-  // records.push(record);
-  // saveToLocalStorage();
-};
-
 const onSubmit = () => {
   if (!amount.value || !category.value) {
     showToast({ message: "請輸入完整資料" });
     return;
   };
 
-  addRecord({
+  financeStore.addRecord({
     id: crypto.randomUUID(),
     type: type.value,
     category: category.value,
