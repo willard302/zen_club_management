@@ -1,9 +1,9 @@
-import type { EventsInsert, FinancesInsert, FinancesRow, MemebersUpdate, UserRow, UserUpdate } from "./supabase";
+import type { EventsInsert, FinancesInsert, MemebersRow, MemebersUpdate, UserInsert, UserRow, UserUpdate } from "./supabase";
 import type { ButtonNativeType, FieldType } from "vant";
 
 export type MainStoreState = {
   isAuthenticated: boolean
-  user: UserRow | UserUpdate | null
+  user: UserInsert | UserUpdate
   tabBarActive: string
   defaultAvatar: string
   locale: string
@@ -12,7 +12,11 @@ export type MainStoreState = {
 
 export type FinanceStoreState = {
   records: FinancesInsert[]
-}
+};
+
+export type MemberStoreState = {
+  member: MemebersRow | MemebersUpdate | null
+};
 
 export type FieldOption = {
   text: string

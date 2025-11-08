@@ -9,12 +9,10 @@ const { updateUser } = useDataBase();
 onMounted(() => {
   if (!mainStore.user || !mainStore.user.id ) throw new Error("There is no user, user_id.");
   username.value = mainStore.user.name ?? "guest";
-  status.value = mainStore.user.status ?? "";
 });
 
 const isEdit = ref(false);
 const username = ref("");
-const status = ref("");
 
 const lists = reactive([
   { title: 'user_data', path: '/profile/userData' }
@@ -24,7 +22,7 @@ const handleToggleState = async() => {
   const userId = mainStore.user?.id;
   if (!userId) throw new Error("There is no id.");
 
-  if (isEdit.value) await updateUser(userId, { 'status': status.value });
+  if (isEdit.value) await updateUser(userId, { 'name': mainStore.user.name });
 
   isEdit.value = !isEdit.value;
 };
@@ -43,15 +41,12 @@ const handleLogout = async () => {
 
 <template>
   <div>
-    <Avatar></Avatar>
+    <Avatar />
       <van-cell-group class="profile__header">
-        <div class="profile__heading">
-          <div class="name">{{ mainStore.user?.name }}</div>
-        </div>
         <div class="profile__heading">
           <div class="status">
             <van-cell-group inset>
-              <van-field v-model="status" input-align="center" :disabled="!isEdit" />
+              <van-field v-model="mainStore.user.name" input-align="center" :disabled="!isEdit" />
             </van-cell-group>
             <van-button v-if="!isEdit" @click="handleToggleState()">
               <font-awesome :icon="['fas', 'pen']" />

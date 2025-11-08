@@ -16,27 +16,27 @@ export type Database = {
     Tables: {
       attendance: {
         Row: {
-          created_at: string | null
+          created_at: string
           event_id: string
           id: number
           member_id: string
-          remark: string | null
+          remark: string
           status: Database["public"]["Enums"]["attendance_status"] | null
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           event_id: string
           id: number
           member_id: string
-          remark?: string | null
+          remark?: string
           status?: Database["public"]["Enums"]["attendance_status"] | null
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           event_id?: string
           id?: number
           member_id?: string
-          remark?: string | null
+          remark?: string
           status?: Database["public"]["Enums"]["attendance_status"] | null
         }
         Relationships: [
@@ -201,14 +201,14 @@ export type Database = {
           avatar_url: string
           birthday: string
           club_group: string
-          club_role: Database["public"]["Enums"]["club_role"]
+          club_role: string
           created_at: string
           created_by: string
           department: string
           email: string
           gender: string
-          grade: Database["public"]["Enums"]["grade"] | null
-          hierarchy: Database["public"]["Enums"]["hierarchy"]
+          grade: string
+          hierarchy: string
           id: string
           instagram: string
           inviter: string
@@ -222,14 +222,14 @@ export type Database = {
           avatar_url?: string
           birthday?: string
           club_group?: string
-          club_role?: Database["public"]["Enums"]["club_role"]
+          club_role?: string
           created_at?: string
           created_by?: string
           department?: string
           email?: string
           gender?: string
-          grade?: Database["public"]["Enums"]["grade"] | null
-          hierarchy?: Database["public"]["Enums"]["hierarchy"]
+          grade?: string
+          hierarchy?: string
           id?: string
           instagram?: string
           inviter?: string
@@ -243,14 +243,14 @@ export type Database = {
           avatar_url?: string
           birthday?: string
           club_group?: string
-          club_role?: Database["public"]["Enums"]["club_role"]
+          club_role?: string
           created_at?: string
           created_by?: string
           department?: string
           email?: string
           gender?: string
-          grade?: Database["public"]["Enums"]["grade"] | null
-          hierarchy?: Database["public"]["Enums"]["hierarchy"]
+          grade?: string
+          hierarchy?: string
           id?: string
           instagram?: string
           inviter?: string
@@ -265,42 +265,66 @@ export type Database = {
       users: {
         Row: {
           avatar_url: string
+          birthday: string
+          club_group: string
+          club_role: string
           created_at: string
+          created_by: string
           department: string
           email: string
           gender: string
+          grade: string
+          hierarchy: string
           id: string
+          instagram: string
+          inviter: string
+          join_date: string
+          line_id: string
           name: string
           phone: string
-          role: Database["public"]["Enums"]["club_role"]
-          status: string
-          student_years: Database["public"]["Enums"]["grade"]
+          student_id: string
         }
         Insert: {
           avatar_url?: string
+          birthday?: string
+          club_group?: string
+          club_role?: string
           created_at?: string
+          created_by?: string
           department?: string
           email?: string
           gender?: string
+          grade?: string
+          hierarchy?: string
           id?: string
+          instagram?: string
+          inviter?: string
+          join_date?: string
+          line_id?: string
           name?: string
           phone?: string
-          role?: Database["public"]["Enums"]["club_role"]
-          status?: string
-          student_years?: Database["public"]["Enums"]["grade"]
+          student_id?: string
         }
         Update: {
           avatar_url?: string
+          birthday?: string
+          club_group?: string
+          club_role?: string
           created_at?: string
+          created_by?: string
           department?: string
           email?: string
           gender?: string
+          grade?: string
+          hierarchy?: string
           id?: string
+          instagram?: string
+          inviter?: string
+          join_date?: string
+          line_id?: string
           name?: string
           phone?: string
-          role?: Database["public"]["Enums"]["club_role"]
-          status?: string
-          student_years?: Database["public"]["Enums"]["grade"]
+          student_id?: string
         }
         Relationships: []
       }

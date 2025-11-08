@@ -3,7 +3,7 @@ import type { UserRow, UserUpdate } from "~/types/supabase";
 export const useMainStore = defineStore('main', {
   state: (): MainStoreState => ({
     isAuthenticated: false,
-    user: null,
+    user: {},
     tabBarActive: 'home',
     defaultAvatar: "https://vvbtzvedcvhxibozbryz.supabase.co/storage/v1/object/public/icc_avatar/default_avatar.png",
     locale: 'tw',
@@ -19,8 +19,8 @@ export const useMainStore = defineStore('main', {
     setTabbar(value: boolean) {
       this.showTabbar = value
     },
-    setUser(user: UserRow | UserUpdate) {
-      this.user = user;
+    setUser(user: Partial<UserRow> | Partial<UserUpdate>) {
+      this.user = {...this.user, ...user};
     },
     setTabBarActive(active: string){
       this.tabBarActive = active;
@@ -31,7 +31,7 @@ export const useMainStore = defineStore('main', {
     initAuth() {
       this.isAuthenticated = false;
       this.showTabbar = false;
-      this.user = null;
+      this.user = {};
     }
   },
   persist: true
