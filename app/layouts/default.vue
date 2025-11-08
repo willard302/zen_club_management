@@ -22,5 +22,6 @@ header {
 }
 main {
   margin-top: 46px;
+  margin-bottom: 60px;
 }
 </style>
