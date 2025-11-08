@@ -14,7 +14,6 @@ onMounted(async() => {
 const loading = ref(false);
 const finished = ref(false);
 const showNewMemberForm = ref(false);
-const showMemberEditor = ref(false);
 const fieldItems: FieldItem[] = reactive([
   { 
     label: "name",
@@ -90,14 +89,13 @@ const loadMembers = async() => {
 const handleOpenNewPanel = () => {
   showNewMemberForm.value = true;
 };
-const handleOpenMemberEditor = () => {
-  showMemberEditor.value = true;
-};
 const onEdit = async(item: string) => {
   console.log("edit: ", item)
-  handleOpenMemberEditor();
+  
   const member = await getMember(item);
   console.log("member: ", member)
+
+  navigateTo('/members/memberData');
 };
 const onDelete = async(member_id: string) => {
   const result = await rmMember(member_id);
@@ -155,18 +153,6 @@ const handleOnClick = async(event: string) => {
         button-class="d-flex-40"
         @submit="onSubmit"
         @button="handleOnClick"
-      />
-    </van-popup>
-    <van-popup
-      v-model:show="showMemberEditor"
-      position="bottom"
-      round
-    >
-      <FieldForm 
-        custom-class="member"
-        :button-items="buttonItems"
-        button-class="d-flex-40"
-
       />
     </van-popup>
   </div>
