@@ -2,7 +2,7 @@ export default {
   birth_date: "出生日期",
   birthday: "生日",
   cancel: "取消",
-  club_group: "社團",
+  club_group: "社團分組",
   club_role: "社團身份",
   confirm: "確認",
   create: "創建",

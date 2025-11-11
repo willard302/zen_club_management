@@ -7,7 +7,8 @@ export const useMemberStore = defineStore('member', {
   }),
   actions: {
     setMember(member: MemebersRow | MemebersUpdate) {
-      this.member = member
+      this.member = { ...this.member, ...member };
     }
-  }
+  },
+  persist: true
 })

@@ -1,5 +1,5 @@
 import type { Database } from "~/types/database.types"
-import type { EventsInsert, MemebersInsert, UserRow, UserUpdate } from "~/types/supabase";
+import type { EventsInsert, MemebersInsert, MemebersUpdate, UserRow, UserUpdate } from "~/types/supabase";
 
 export const useDataBase = () => {
   const client = useSupabaseClient<Database>();
@@ -103,6 +103,17 @@ export const useDataBase = () => {
       .select()
   };
 
+  const updateMember = async(
+    memberId: string,
+    updateData: MemebersUpdate
+  ) => {
+    return await client
+      .from('members')
+      .update(updateData)
+      .eq('id', memberId)
+      .select()
+  };
+
   const rmMember = async(member_id:string) => {
     const response = await client
       .from("members")
@@ -129,6 +140,7 @@ export const useDataBase = () => {
     insertMember,
     insertEvent,
     updateUser,
+    updateMember,
     rmMember,
     rmEvent
   }

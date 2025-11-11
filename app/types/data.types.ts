@@ -1,4 +1,4 @@
-import type { EventsInsert, FinancesInsert, MemebersRow, MemebersUpdate, UserInsert, UserRow, UserUpdate } from "./supabase";
+import type { EventsInsert, FinancesInsert, MemebersInsert, MemebersRow, MemebersUpdate, UserInsert, UserRow, UserUpdate } from "./supabase";
 import type { ButtonNativeType, FieldType } from "vant";
 
 export type MainStoreState = {
@@ -15,7 +15,7 @@ export type FinanceStoreState = {
 };
 
 export type MemberStoreState = {
-  member: MemebersRow | MemebersUpdate | null
+  member: MemebersInsert | MemebersUpdate
 };
 
 export type FieldOption = {

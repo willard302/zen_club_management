@@ -6,7 +6,9 @@ import type { MemebersInsert } from '~/types/supabase';
 const { fieldsToDatabase } = useConverter();
 const { getMember, getMembers, insertMember, rmMember } = useDataBase();
 const mainStore = useMainStore();
+const memberStore = useMemberStore();
 const { t } = useI18n();
+
 onMounted(async() => {
   await loadMembers();
 });
@@ -90,10 +92,9 @@ const handleOpenNewPanel = () => {
   showNewMemberForm.value = true;
 };
 const onEdit = async(item: string) => {
-  console.log("edit: ", item)
-  
+
   const member = await getMember(item);
-  console.log("member: ", member)
+  memberStore.setMember(member)
 
   navigateTo('/members/memberData');
 };
