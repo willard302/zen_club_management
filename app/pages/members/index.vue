@@ -13,9 +13,16 @@ onMounted(async() => {
   await loadMembers();
 });
 
+const buttonItems: ButtonItem[] = [
+  { text: "confirm", type: "submit" },
+  { text: "cancel", type: "button", action: "cancel" }
+];
+
 const loading = ref(false);
 const finished = ref(false);
 const showNewMemberForm = ref(false);
+const contacts = ref<MemebersInsert[]>([]);
+
 const fieldItems: FieldItem[] = reactive([
   { 
     label: "name",
@@ -73,11 +80,6 @@ const fieldItems: FieldItem[] = reactive([
     message: 'Hints.enter_inviter'
   }
 ]);
-const buttonItems: ButtonItem[] = [
-  { text: "confirm", type: "submit" },
-  { text: "cancel", type: "button", action: "cancel" }
-]
-const contacts = ref<MemebersInsert[]>([]);
 
 const loadMembers = async() => {
   if (!mainStore.user || !mainStore.user.id) throw new Error(`There is no user.`);
@@ -87,7 +89,6 @@ const loadMembers = async() => {
   };
   finished.value = true;
 };
-
 const handleOpenNewPanel = () => {
   showNewMemberForm.value = true;
 };

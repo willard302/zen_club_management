@@ -48,7 +48,7 @@ const roleType = (role:string) => {
     <div class="member__card">
       <div class="card__header">
         <div class="name">{{ name }}</div>
-        <van-tag v-if="club_role" :type="roleType(club_role)" plain>{{ club_role }}</van-tag>
+        <van-tag v-if="club_role" :type="roleType(club_role)" plain>{{ $t(`Role.${club_role}`) }}</van-tag>
       </div>
       <div class="card__body">
         <van-row gutter="20">
