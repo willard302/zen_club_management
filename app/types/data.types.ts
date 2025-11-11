@@ -1,4 +1,4 @@
-import type { EventsInsert, FinancesInsert, MemebersInsert, MemebersRow, MemebersUpdate, UserInsert, UserRow, UserUpdate } from "./supabase";
+import type { EventsInsert, EventsUpdate, FinancesInsert, MemebersInsert, MemebersRow, MemebersUpdate, UserInsert, UserRow, UserUpdate } from "./supabase";
 import type { ButtonNativeType, FieldType } from "vant";
 
 export type MainStoreState = {
@@ -8,6 +8,10 @@ export type MainStoreState = {
   defaultAvatar: string
   locale: string
   showTabbar: boolean
+};
+
+export type EventStoreState = {
+  event: EventsInsert | EventsUpdate
 };
 
 export type FinanceStoreState = {

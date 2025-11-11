@@ -16,6 +16,7 @@ const fields = ref(props.fieldItems);
 const showPicker = ref(false);
 const pickerOptions = ref<any[]>([]);
 const pickerField = ref<FieldItem | null>(null);
+const labelWidth = '6em';
 
 const handleOnClick = (event: ButtonItem) => {
   if (event.to) return navigateTo(event.to);
@@ -42,7 +43,6 @@ const onConfirm = (
 ) => {
   if (!pickerField.value) return;
   pickerField.value.value = selectedValues[0] ?? '';
-  console.log('selectedValues', selectedValues);
   showPicker.value = false;
 };
 
@@ -61,6 +61,7 @@ const onCancel = () => {
           :type="field.type"
           :name="field.name"
           :label="$t(field.label)"
+          :label-width="labelWidth"
         >
           <template v-if="field.type === 'checkbox'" #input>
             <van-switch v-model="field.value" />
@@ -73,6 +74,7 @@ const onCancel = () => {
           readonly
           :name="field.name"
           :label="$t(field.label)"
+          :label-width="labelWidth"
           :placeholder="field.placeholder"
           :model-value="String(field.value)"
           @click="openPicker(field)"
@@ -84,6 +86,7 @@ const onCancel = () => {
           v-model="field.value as string | number | undefined"
           :name="field.name"
           :label="$t(field.label)"
+          :label-width="labelWidth"
           :placeholder="field.placeholder ? $t(field.placeholder) : ''"
           :rules="[{
             required: field.required,
@@ -124,6 +127,7 @@ const onCancel = () => {
   left: 5%;
   width: 90%;
 }
+
 .button__menu {
   margin: 20px auto 10px;
 

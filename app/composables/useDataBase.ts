@@ -45,6 +45,18 @@ export const useDataBase = () => {
     return data ?? [];
   };
 
+  const getEvent = async(eventId: string) => {
+    const {data, error} = await client
+      .from("events")
+      .select("*")
+      .eq("id", eventId)
+      .maybeSingle()
+
+    if (error) throw new Error(`Error fetching event: ${error}`);
+
+    return data;
+  };
+
   const getEvents = async() => {
     const {data, error} = await client
       .from("events")
@@ -136,6 +148,7 @@ export const useDataBase = () => {
     getMember,
     getMembers,
     getUser,
+    getEvent,
     getEvents,
     insertMember,
     insertEvent,

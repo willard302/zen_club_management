@@ -6,13 +6,13 @@ import type { ButtonItem, FieldItem } from "~/types/data.types";
 const { insertEvent } = useDataBase();
 const { fieldsToDbEvents } = useConverter();
 const {
-  event, 
   events, 
   showNewEventEditor, 
   showEventAction,
   loadEvents,
   handleOpenNewEventEditor, 
   handleEventClick,
+  handleDateClick,
   handleDeleteEvent
 } = useCalendarUI();
 
@@ -21,7 +21,7 @@ const buttonItems_newEvent: ButtonItem[] = [
   { text: "cancel", type: "button", action: "cancel"}
 ];
 const buttonItems_eventAction: ButtonItem[] = [
-  { text: "edit", type: "button", action: "edit_eventAction" },
+  { text: "edit", type: "button", to: "/home/eventData" },
   { text: "delete", type: "button", action: "delete_eventAction" },
   { text: "cancel", type: "button", action: "cancel"}
 ];
@@ -75,8 +75,6 @@ const fieldItems = reactive<FieldItem[]>([
   }
 ]);
 
-onMounted(loadEvents);
-
 const onSubmit = async() => {
   try {
     const newEvent = fieldsToDbEvents(fieldItems);
@@ -97,11 +95,16 @@ const onSubmit = async() => {
 
 const handleOnClick = async(action: string) => {
   switch(action) {
+    case "edit_eventAction":
+
+      break;
     case "delete_eventAction":
-      await handleDeleteEvent()
+      await handleDeleteEvent();
+      break;
     case "cancel":
       showNewEventEditor.value = false;
       showEventAction.value = false;
+      break;
   };
 };
 
@@ -123,13 +126,10 @@ watch(
   },
   { immediate: true }
 );
-watch(event, (newVal) => {
-  fieldItems.forEach((f: FieldItem) => {
-    f.value = newVal.find(v => v.name === f.name)?.value || "";
-  });
-  showEventAction.value = true;
-});
 
+onMounted(()=>{
+  loadEvents();
+});
 
 </script>
 
@@ -139,7 +139,7 @@ watch(event, (newVal) => {
       <Calendar
         ref="calendarRef"
         :events="events"
-        :on-date-click="(info:any) => console.log('dateClick', info)"
+        :on-date-click="(info:any) => handleDateClick(info)"
         :on-event-click="handleEventClick"
       />
       
@@ -151,7 +151,7 @@ watch(event, (newVal) => {
         v-model:modelValue="showNewEventEditor"
         :field-items="fieldItems"
         :button-items="buttonItems_newEvent"
-        title="calendar.new_event"
+        :title="$t('calendar.new_event')"
         button-class="d-flex-40"
         @submit="onSubmit"
         @button="handleOnClick"

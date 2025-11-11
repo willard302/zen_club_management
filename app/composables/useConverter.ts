@@ -73,16 +73,16 @@ export const useConverter = () => {
   };
 
   const calendarToFields = (event: EventsInsert): FieldItem[] => {
+
     const fields: FieldItem[] = [];
-    const eventObj = Object.getOwnPropertyDescriptors(event)._def?.value;
+    const eventObj = Object.getOwnPropertyDescriptors(event);
 
     for (const [key, value] of Object.entries(eventObj)) {
-      // console.log(`${key}:  ${value}`)
       switch(key) {
         case "start_at":
           fields.push({
             label: key,
-            value: String(value),
+            value: String(value.value),
             name: key,
             type: 'datetime-local'
           });
@@ -90,7 +90,7 @@ export const useConverter = () => {
         case "end_at":
           fields.push({
             label: key,
-            value: String(value),
+            value: String(value.value),
             name: key,
             type: 'datetime-local' 
           });
@@ -98,14 +98,12 @@ export const useConverter = () => {
         default:
           fields.push({
             label: key,
-            value: String(value),
+            value: String(value.value),
             name: key, 
             type: 'text'
           });
           break;
       };
-
-      // console.log(fields)
     }
     return fields;
   }
