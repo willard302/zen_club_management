@@ -54,7 +54,17 @@ const showPickerHierarchy = ref(false);
 const showPickerRole = ref(false);
 const showPickerGrade = ref(false);
 const localUser = ref({...props.userData});
-const fields = ref<FieldItem[]>([]);
+
+const fields = computed<FieldItem[]>(() => {
+  return Object.entries(localUser.value)
+    .filter(([key]) => !hideItems.includes(key))
+    .map(([key, val]) => ({
+      label: key,
+      value: fieldValue(key, val),
+      name: key
+    }))
+    .sort((a,b) => order.indexOf(a.name) - order.indexOf(b.name));
+});
 
 const fieldValue = (key: string, val: string) => {
   if (!val) return '';
@@ -66,22 +76,10 @@ const fieldValue = (key: string, val: string) => {
     default: return val;
   };
 };
-const loadFields = (user:UserInsert) => {
-  const newFields = Object.entries(user)
-    .filter(([key]) => !hideItems.includes(key))
-    .map(([key, val]) => ({
-      label: key,
-      value: fieldValue(key, val),
-      name: key
-    }));
-  
-  fields.value = newFields.sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
-};
 const onChangeData = (info: FieldItem) => {
   if (!info.name) return;
   const updateData = { [info.name]: info.value ?? '' } as Partial<UserRow>
   localUser.value = {...localUser.value, ...updateData}
-  loadFields(localUser.value)
 };
 const onConfirmPicker = (
   key: keyof UserInsert, 
@@ -90,7 +88,6 @@ const onConfirmPicker = (
   const newData = { [key]: String(selectedValues[0]) } as Partial<UserInsert>;
   localUser.value = { ...localUser.value, ...newData };
   showPickerGender.value = showPickerHierarchy.value = showPickerRole.value = showPickerGrade.value = false;
-  loadFields(localUser.value);
 };
 const onSubmit = () => {
   emit('submit', localUser.value);
@@ -98,7 +95,6 @@ const onSubmit = () => {
 const toggleEdit = () => {
   if( props.editable ) {
     localUser.value = props.userData
-    loadFields(localUser.value)
   };
   emit('editable', props.editable ? false : true); 
 };
@@ -124,10 +120,6 @@ const handleToggle = (action: string) => {
   }
 };
 
-onMounted(() => {
-  loadFields(localUser.value)
-});
-
 </script>
 
 <template>
@@ -135,7 +127,7 @@ onMounted(() => {
     <van-cell-group inset>
       <Avatar />
 
-      <template v-for="f in fields" :key="`${localUser.name}-${f.name}`">
+      <template v-for="f in fields" :key="f.name">
         <van-field
           v-if="['gender', 'hierarchy', 'club_role', 'grade'].includes(f.name)"
           is-link
@@ -152,6 +144,14 @@ onMounted(() => {
           @update:model-value="val => onChangeData({...f, value: val})"
         />
         <van-field 
+          v-else-if="f.name === 'name'"
+          type="text"
+          v-model="(f.value as string)"
+          :label="$t(f.label)"
+          @update:model-value="val => onChangeData({...f, value: val})"
+        />
+
+        <van-field 
           v-else-if="['birthday', 'join_date'].includes(f.name)"
           type="date"
           v-model="(f.value as string)"
@@ -160,6 +160,7 @@ onMounted(() => {
         />
         <van-field 
           v-else
+          type="text"
           v-model="(f.value as string)"
           :label="$t(f.label)"
           @update:model-value="val => onChangeData({...f, value: val})"

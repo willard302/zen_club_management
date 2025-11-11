@@ -20,9 +20,10 @@ const onSubmit = async (val: Partial<UserRow>) => {
     onClose: () => isEditable.value = false
   });
 };
+
 const onEdit = (val:boolean) => {
   isEditable.value = val;
-}
+};
 </script>
 <template>
   <UserForm 
