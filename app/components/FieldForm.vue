@@ -9,7 +9,7 @@ const props = defineProps<{
   buttonClass?: string
 }>();
 
-const emit = defineEmits(['submit', 'button']);
+const emit = defineEmits(['submit', 'button', 'passwordToggle']);
 
 const fields = ref(props.fieldItems);
 
@@ -49,6 +49,10 @@ const onConfirm = (
 const onCancel = () => {
   showPicker.value = false;
 };
+
+const handleShowPassword = (type: string) => {
+  emit('passwordToggle', type);
+}
 </script>
 
 <template>
@@ -93,7 +97,12 @@ const onCancel = () => {
             message: field.message ? $t(field.message) : ''
           }]"
           :autocomplete="field.autocomplete"
-        />
+          @click-right-icon="field.name.includes('password') ? handleShowPassword(field.name) : null"
+        >
+          <template v-if="field.name.includes('password')" #right-icon>
+            <font-awesome :icon="['fas', (field.type === 'password' ? 'eye' : 'eye-slash')]" />
+          </template>
+        </van-field>
       </template>
     </van-cell-group>
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 definePageMeta({title: 'login'});
 import type { ButtonItem, FieldItem } from '~/types/data.types';
-const { login } = useAuth();
-const { getUser } = useDataBase();
+const { login, showPassword } = useAuth();
+const { getUser, insertUser } = useDataBase();
 const router = useRouter();
 const mainStore = useMainStore();
 
@@ -50,6 +50,19 @@ const handleLogin = async(account: FieldItem[]) => {
   mainStore.setUser({id: user_id});
 
   const user = await getUser(user_id);
+  if (!user) {
+    console.error("user profile is null.");
+    console.log("creating user profile...")
+    const newInfo = await insertUser({
+      id: user_id,
+      email: username as string,
+      avatar_url: "https://vvbtzvedcvhxibozbryz.supabase.co/storage/v1/object/public/icc_avatar/1765174676551-model01w.png",
+      created_by: mainStore.user.name,
+    });
+    if (newInfo) await insertUser(newInfo);
+    navigateTo('/profile')
+    return;
+  }
   mainStore.setUser(user);
   
   if (user === null) {
@@ -70,6 +83,10 @@ const buttonItems: ButtonItem[] = [
   { text: "submit", type: "submit" },
   { text: "register", type: "button", to: "/auth/register" }
 ];
+
+const handleShowPassword = (name: string) => {
+  showPassword(fieldItems, name);
+};
 </script>
 
 <template>
@@ -77,6 +94,7 @@ const buttonItems: ButtonItem[] = [
     :fieldItems="fieldItems"
     :buttonItems="buttonItems"
     @submit="handleLogin"
+    @passwordToggle="handleShowPassword"
   />
 </template>
 

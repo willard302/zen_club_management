@@ -5,7 +5,7 @@ definePageMeta({
 import { showFailToast, showLoadingToast, showSuccessToast } from "vant";
 import type { ButtonItem, FieldItem } from "~/types/data.types";
 const router = useRouter();
-const { register } = useAuth();
+const { register, showPassword } = useAuth();
 const fieldItems: FieldItem[] = reactive([
   { 
     label: "username",
@@ -68,6 +68,10 @@ const handleRegister = async() => {
     router.push("/auth/login")
   }
 };
+
+const handleShowPassword = (name: string) => {
+  showPassword(fieldItems, name);
+};
 </script>
 
 <template>
@@ -75,6 +79,7 @@ const handleRegister = async() => {
     :fieldItems="fieldItems"
     :buttonItems="buttonItems"
     @submit="handleRegister"
+    @passwordToggle="handleShowPassword"
   ></FieldForm>
 </template>
 

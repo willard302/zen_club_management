@@ -1,3 +1,5 @@
+import type { FieldItem } from "~/types/data.types";
+
 export const useAuth = () => {
   
   const client = useSupabaseClient();
@@ -27,7 +29,13 @@ export const useAuth = () => {
       password: password
     });
     return result;
-  }
+  };
 
-  return { login, logout, register }
+  const showPassword = (fields: FieldItem[], name: string) => {
+    const password = fields.find(item => item.name === name);
+    if (!password) return;
+    password.type = password?.type === 'password' ? 'text' : 'password';
+  };
+
+  return { login, logout, register, showPassword }
 }

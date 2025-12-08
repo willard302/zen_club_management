@@ -76,7 +76,7 @@ export default defineNuxtConfig({
   },
   fontawesome: {
     icons: {
-      solid: ['house', 'user', 'pen', 'caret-right', 'check', 'ellipsis-vertical', 'id-card', 'money-check-dollar', 'square-plus'],
+      solid: ['house', 'user', 'pen', 'caret-right', 'check', 'ellipsis-vertical', 'id-card', 'money-check-dollar', 'square-plus', 'eye', 'eye-slash'],
       regular: ['user', 'face-smile']
     }
   },
