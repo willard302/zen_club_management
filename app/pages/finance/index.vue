@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FinancialCard from '~/components/FinancialCard.vue';
+import FinancialCard from '~/pages/finance/components/FinancialCard.vue';
 const financeStore = useFinanceStore();
 </script>
 

@@ -98,6 +98,10 @@ const financialType = (type: string) => {
   font-weight: 600;
   margin-bottom: 6px;
 
+  .van-row {
+    width: 100%;
+  }
+
   .custom__title {
     display: flex;
     align-items: center;
