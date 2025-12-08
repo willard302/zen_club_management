@@ -16,7 +16,9 @@ const onAfterRead = async (
   if (!mainStore.user || !mainStore.user.id) throw `There is no user or userId.`;
   const user_id = mainStore.user.id;
 
-  const oldUrl = (await getUser(user_id, 'avatar_url')).avatar_url;
+  const user = await getUser(user_id);
+  if (!user) return;
+  const oldUrl = user.avatar_url;
   const file = fileItem as UploaderFileListItem;
   if (!file || !file.file) return;
 
@@ -24,8 +26,7 @@ const onAfterRead = async (
   if (!newUrl) throw "There is no url.";
   
   avatar_url.value = [{ url: newUrl[0] }];
-  const {data, error} = await updateUser(user_id, {avatar_url: newUrl[0]});
-  if (error) throw error;
+  const data = await updateUser(user_id, {avatar_url: newUrl[0]});
   if (!data) throw `there is no data`;
   if (mainStore.user) {
     Object.assign(mainStore.user, {avatar_url: newUrl[0]})

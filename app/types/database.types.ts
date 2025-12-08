@@ -18,7 +18,7 @@ export type Database = {
         Row: {
           created_at: string
           event_id: string
-          id: number
+          id: string
           member_id: string
           remark: string
           status: Database["public"]["Enums"]["attendance_status"] | null
@@ -26,7 +26,7 @@ export type Database = {
         Insert: {
           created_at?: string
           event_id: string
-          id: number
+          id?: string
           member_id: string
           remark?: string
           status?: Database["public"]["Enums"]["attendance_status"] | null
@@ -34,7 +34,7 @@ export type Database = {
         Update: {
           created_at?: string
           event_id?: string
-          id?: number
+          id?: string
           member_id?: string
           remark?: string
           status?: Database["public"]["Enums"]["attendance_status"] | null
@@ -58,7 +58,7 @@ export type Database = {
       }
       clubs: {
         Row: {
-          created_at: string | null
+          created_at: string
           description: string | null
           id: string
           name: string
@@ -66,7 +66,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           description?: string | null
           id?: string
           name: string
@@ -74,7 +74,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           description?: string | null
           id?: string
           name?: string
@@ -133,6 +133,7 @@ export type Database = {
           accountant: string
           amount: number
           category: string
+          created_at: string
           date: string
           id: string
           note: string
@@ -143,6 +144,7 @@ export type Database = {
           accountant?: string
           amount?: number
           category?: string
+          created_at?: string
           date?: string
           id?: string
           note?: string
@@ -153,6 +155,7 @@ export type Database = {
           accountant?: string
           amount?: number
           category?: string
+          created_at?: string
           date?: string
           id?: string
           note?: string
@@ -161,29 +164,35 @@ export type Database = {
         }
         Relationships: []
       }
-      member_status: {
+      member_tracker: {
         Row: {
           contact_date: string | null
           contact_way: string | null
-          created_at: string | null
-          id: number
+          created_at: string
+          created_by: string
+          id: string
           member_id: string | null
+          member_name: string
           member_status: string | null
         }
         Insert: {
           contact_date?: string | null
           contact_way?: string | null
-          created_at?: string | null
-          id: number
+          created_at?: string
+          created_by?: string
+          id?: string
           member_id?: string | null
+          member_name?: string
           member_status?: string | null
         }
         Update: {
           contact_date?: string | null
           contact_way?: string | null
-          created_at?: string | null
-          id?: number
+          created_at?: string
+          created_by?: string
+          id?: string
           member_id?: string | null
+          member_name?: string
           member_status?: string | null
         }
         Relationships: [

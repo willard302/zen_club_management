@@ -3,7 +3,7 @@ import type { EventInput } from "@fullcalendar/core";
 import { Constants } from "~/types/database.types";
 
 declare module '#supabase/schema' {
-    interface DatabaseDefinition extends Database {};
+  interface DatabaseDefinition extends Database {};
 };
 
 type User = Database['public']['Tables']['users'];
@@ -25,6 +25,11 @@ type Memebers = Database['public']['Tables']['members'];
 export type MemebersRow = Memebers['Row'];
 export type MemebersInsert = Memebers['Insert'];
 export type MemebersUpdate = Memebers['Update'];
+
+type Trackers = Database['public']['Tables']['member_tracker'];
+export type TrackersRow = Trackers['Row'];
+export type TrackersInsert = Trackers['Insert'];
+export type TrackersUpdate = Trackers['Update'];
 
 type Events = Database['public']['Tables']['events'];
 export type EventsRow = Events['Row'];

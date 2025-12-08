@@ -1,22 +1,26 @@
 import type { Database } from "~/types/database.types"
-import type { EventsInsert, MemebersInsert, MemebersUpdate, UserRow, UserUpdate } from "~/types/supabase";
+import type { EventsInsert, MemebersInsert, MemebersUpdate, UserInsert, UserRow, UserUpdate } from "~/types/supabase";
 
 export const useDataBase = () => {
   const client = useSupabaseClient<Database>();
+
+  const handleError = (error: any, context: string) => {
+    if (error) {
+      console.error(`${context}:${error}`);
+      throw new Error(`${context}: ${error.message || error}`);
+    }
+  };
+
+  // --- GET (Read) ---
   
-  const getUser = async<K extends keyof UserRow>(
-    userId: string,
-    attribute?: K
-  ) => {
+  const getUser = async(userId: string) => {
     const {data, error} = await client
       .from("users")
-      .select(attribute ? attribute : "*")
+      .select("*")
       .eq("id", userId)
       .maybeSingle()
     
-    if (error) throw new Error(`Error fetching user: ${error}`);
-
-    if (!data) throw new Error("No User found.");
+    handleError(error, "Error fetching user")
 
     return data;
   };
@@ -28,21 +32,22 @@ export const useDataBase = () => {
       .eq("id", memberId)
       .maybeSingle()
     
-    if(error) throw new Error(`Error fecthing member: ${error}`);
-
-    if(!data) throw new Error("No member found.");
+    handleError(error, "Error fetching member");
+    if(!data) throw new Error(`Member not found with ID: ${memberId}`);
 
     return data;
   };
 
-  const getMembers = async() => {
+  const getMemberTracker = async(memberId:string) => {
     const {data, error} = await client
-      .from("members")
+      .from("member_tracker")
       .select("*")
-    
-    if(error) throw new Error(`Error fetching user: ${error}`);
+      .eq("member_id", memberId)
+      .maybeSingle()
 
-    return data ?? [];
+      handleError(error, `Error fetching member tracker`);
+
+      return data;
   };
 
   const getEvent = async(eventId: string) => {
@@ -52,10 +57,29 @@ export const useDataBase = () => {
       .eq("id", eventId)
       .maybeSingle()
 
-    if (error) throw new Error(`Error fetching event: ${error}`);
+    handleError(error, "Error fetching event");
+    if (!data) throw new Error(`Event not found with ID: ${eventId}`);
 
     return data;
   };
+
+  const getMembers = async() => {
+    const {data, error} = await client
+      .from("members")
+      .select("*")
+    
+    handleError(error, `Error fetching members.`)
+    return data ?? [];
+  };
+
+  const getMemberTrackers = async() => {
+    const {data, error} = await client
+      .from("member_tracker")
+      .select("*")
+
+    handleError(error, `Error fetching member trackers.`);
+    return data ?? [];
+  }
 
   const getEvents = async() => {
     const {data, error} = await client
@@ -68,88 +92,97 @@ export const useDataBase = () => {
     return data ?? []
   };
 
-  const insertMember = async(
-    memberInfo: MemebersInsert
-  ) => {
+  // --- INSERT (Create) ---
+
+  const insertUser = async(userInfo: UserInsert) => {
+    const {data, error} = await client
+      .from("users")
+      .insert(userInfo)
+      .select("*")
+      .single();
+
+    handleError(error, `Error inserting user.`);
+    return data;
+  }
+
+  const insertMember = async(memberInfo: MemebersInsert) => {
     const {data, error} = await client
       .from("members")
       .insert(memberInfo)
       .select('*')
+      .single();
     
-    if(error) {
-      console.error('Insert error: ', error);
-      throw new Error(`Error inserting member: ${JSON.stringify(error, null, 2)}`);
-    };
-  
-    console.log('Insert success: ', data);
-
+    handleError(error, `Error inserting member.`)
     return data;
   };
 
-  const insertEvent = async(
-    event: EventsInsert
-  ) => {
+  const insertEvent = async(event: EventsInsert) => {
     const {data, error} = await client
       .from("events")
       .insert(event)
       .select()
     
-    if(error) throw new Error(`Error insert event: ${error}`);
-
-    if(!data) {
-      console.warn('No event insert.');
-      return;
-    };
-
+    handleError(error, `Error inserting event.`);
     return data;
   };
 
-  const updateUser = async(
-    userId: string,
-    updateData: UserUpdate
-  ) => {
-    return await client
+  // --- UPDATE ---
+
+  const updateUser = async(userId: string, updateData: UserUpdate) => {
+    const {data, error} = await client
       .from('users')
       .update(updateData)
       .eq('id', userId)
       .select()
+      .single()
+
+    handleError(error, `Error updating user.`);
+    return data;
   };
 
-  const updateMember = async(
-    memberId: string,
-    updateData: MemebersUpdate
-  ) => {
-    return await client
+  const updateMember = async(memberId: string, updateData: MemebersUpdate) => {
+    const {data, error} = await client
       .from('members')
       .update(updateData)
       .eq('id', memberId)
       .select()
+      .single()
+
+    handleError(error, `Error updating member.`);
+    return data;
   };
 
-  const rmMember = async(member_id:string) => {
-    const response = await client
+  // --- DELETE ---
+
+  const rmMember = async(memberId: string) => {
+    const {error, status} = await client
       .from("members")
       .delete()
-      .eq('id', member_id);
+      .eq('id', memberId);
 
-    return response.status;
-  }
+    handleError(error, `Error deleting member.`);
+    return status;
+  };
 
   const rmEvent = async(event_id: string) => {
-    const response = await client
+    const {error, status} = await client
       .from('events')
       .delete()
       .eq('id', event_id);
     
-    return response.status;
+    handleError(error, `Error deleting event.`);
+    return status;
   };
 
   return {
     getMember,
     getMembers,
+    getMemberTracker,
+    getMemberTrackers,
     getUser,
     getEvent,
     getEvents,
+    insertUser,
     insertMember,
     insertEvent,
     updateUser,
