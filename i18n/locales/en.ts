@@ -47,7 +47,7 @@ export default {
   username: "Username",
   week: "Week",
   zen_club: "Zen Club",
-  calendar: {
+  Calendar: {
     all_day: "All Day",
     description: "Description",
     end: "End",
@@ -95,6 +95,10 @@ export default {
     select_country: "Please select your country",
     select_city: "Please select your city",
     select_birthdate: "Please select your birthdate"
+  },
+  Member: {
+    list: "Member List",
+    tracker: "Member Tracker"
   },
   Role: {
     admin: "Admin",

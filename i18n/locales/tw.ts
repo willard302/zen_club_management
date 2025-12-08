@@ -47,7 +47,7 @@ export default {
   username: "帳號",
   week: "週",
   zen_club: "禪學社",
-  calendar: {
+  Calendar: {
     all_day: "全天",
     description: "活動描述",
     end: "結束時間",
@@ -95,6 +95,10 @@ export default {
     select_country: "請選擇您的國家",
     select_city: "請選擇您的城市",
     select_birthdate: "請選擇您的出生日期"
+  },
+  Member: {
+    list: "社員清單",
+    tracker: "社員追蹤"
   },
   Role: {
     admin: "管理員",

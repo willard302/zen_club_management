@@ -29,46 +29,46 @@ const selectEventTitle = ref("");
 
 const fieldItems = reactive<FieldItem[]>([
   {
-    label: "calendar.title",
+    label: "Calendar.title",
     value: "",
     name: "title",
     type: "text",
     required: true
   },
   {
-    label: "calendar.all_day",
+    label: "Calendar.all_day",
     value: false,
     name: "all_day",
     type: "checkbox"
   },
   {
-    label: "calendar.start",
+    label: "Calendar.start",
     value: "",
     name: "start",
     type: "datetime-local",
     required: true
   },
   {
-    label: "calendar.end",
+    label: "Calendar.end",
     value: "",
     name: "end",
     type: "datetime-local",
     required: true
   },
   {
-    label: "calendar.recurrence",
+    label: "Calendar.recurrence",
     value: "none",
     name: "recurrence",
     type: "text"
   },
   {
-    label: "calendar.location",
+    label: "Calendar.location",
     value: "",
     name: "location",
     type: "text"
   },
   {
-    label: "calendar.description",
+    label: "Calendar.description",
     value: "",
     name: "description",
     type: "textarea"
@@ -151,7 +151,7 @@ onMounted(()=>{
         v-model:modelValue="showNewEventEditor"
         :field-items="fieldItems"
         :button-items="buttonItems_newEvent"
-        :title="$t('calendar.new_event')"
+        :title="$t('Calendar.new_event')"
         button-class="d-flex-40"
         @submit="onSubmit"
         @button="handleOnClick"
