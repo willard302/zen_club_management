@@ -69,10 +69,10 @@ const fields = computed<FieldItem[]>(() => {
 const fieldValue = (key: string, val: string) => {
   if (!val) return '';
   switch (key) {
-    case 'grade': return t(`Grade.${val}`);
-    case 'club_role': return t(`Role.${val}`);
+    case 'grade':
+    case 'club_role':
+    case 'hierarchy':
     case 'gender': return t(val);
-    case 'hierarchy': return t(`Hierarchy.${val}`);
     default: return val;
   };
 };

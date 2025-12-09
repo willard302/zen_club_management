@@ -9,6 +9,8 @@ const props = defineProps<{
   birth?: string
   club_group?: string
   department?: string
+  created_at?: string
+  member_status?: string | null
 }>();
 const emit = defineEmits(['edit', 'delete']);
 
@@ -45,10 +47,25 @@ const roleType = (role:string) => {
 
 <template>
   <van-swipe-cell>
-    <div class="member__card">
+    <div v-if="type === 'tracker'" class="member__card">
+      <div class="card__header">
+        <van-row gutter="20">
+          <van-col span="6">{{ name }}</van-col>
+          <van-col span="14">{{ created_at }}</van-col>
+        </van-row>
+      </div>
+      <div class="card__body">
+        <van-row gutter="20">
+           <van-col span="20">
+             <van-text-ellipsis :content="member_status ?? ''" />
+           </van-col>
+        </van-row>
+      </div>
+    </div>
+    <div v-else class="member__card">
       <div class="card__header">
         <div class="name">{{ name }}</div>
-        <van-tag v-if="club_role" :type="roleType(club_role)" plain>{{ $t(`Role.${club_role}`) }}</van-tag>
+        <van-tag v-if="club_role" :type="roleType(club_role)" plain>{{ $t(club_role) }}</van-tag>
       </div>
       <div class="card__body">
         <van-row gutter="20">
@@ -83,6 +100,10 @@ const roleType = (role:string) => {
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   margin: 6px 0;
   padding: 10px;
+
+  .van-row {
+    width: 100%;
+  }
 }
 .card__header {
   display: flex;

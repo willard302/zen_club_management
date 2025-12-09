@@ -7,12 +7,12 @@ const { updateMember } = useDataBase();
 const isEditable = ref(false);
 
 const onSubmit = async (val: Partial<MemebersRow>) => {
-  if (!memberStore.member || !memberStore.member.id) throw new Error("There is no user data or user id.");
+  if (!memberStore.memberSelected || !memberStore.memberSelected.id) throw new Error("There is no user data or user id.");
 
   showLoadingToast({message: "Loading..."});
 
   memberStore.setMember(val);
-  await updateMember(memberStore.member.id, memberStore.member);
+  await updateMember(memberStore.memberSelected.id, memberStore.memberSelected);
 
   showSuccessToast({
     message: 'saved success!',
@@ -30,7 +30,7 @@ const onEdit = (val:boolean) => {
 
 <template>
   <UserForm 
-    :user-data="memberStore.member"
+    :user-data="memberStore.memberSelected"
     :editable="isEditable"
     @editable="onEdit"
     @submit="onSubmit"

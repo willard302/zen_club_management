@@ -1,4 +1,4 @@
-import type { EventsInsert, EventsUpdate, FinancesInsert, MemebersInsert, MemebersRow, MemebersUpdate, UserInsert, UserRow, UserUpdate } from "./supabase";
+import type { EventsInsert, EventsUpdate, FinancesInsert, MemebersInsert, MemebersRow, MemebersUpdate, TrackersInsert, TrackersRow, UserInsert, UserRow, UserUpdate } from "./supabase";
 import type { ButtonNativeType, FieldType } from "vant";
 
 export type MainStoreState = {
@@ -18,13 +18,15 @@ export type FinanceStoreState = {
   records: FinancesInsert[]
 };
 
-export type MemberStoreState = {
-  member: MemebersInsert | MemebersUpdate
+export type MemberItem = {
+  id: string,
+  name: string
 };
 
 export type FieldOption = {
   text: string
   value: string
+  id?: string
 }
 
 export type FieldItem = {
@@ -85,4 +87,8 @@ export type EventExtended = {
 export type Operation = {
   name: string
   id: string
+};
+
+export type TrackerWithMember = TrackersInsert & {
+  members: Pick<MemebersRow, 'name' | 'department' | 'birthday' | 'club_group'> | null
 };

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ButtonItem, FieldItem } from '~/types/data.types';
+import type { ButtonItem, FieldItem, FieldOption } from '~/types/data.types';
 const { t } = useI18n();
 
 const props = defineProps<{
@@ -25,24 +25,36 @@ const handleOnClick = (event: ButtonItem) => {
 };
 
 const openPicker = (field: FieldItem) => {
+  pickerOptions.value = [];
   switch(field.name) {
-    case "club_role":
-      pickerOptions.value = field.options?.map(f => ({text: f.text, value: t(`Role.${f.value}`)})) ?? [];
+    case "member_name":
+      pickerOptions.value = field.options?.map(f => ({text: f.text, value: f.text, id: f.id})) ?? [];
       break;
-    case "grade":
-      pickerOptions.value = field.options?.map(f => ({text: f.text, value: t(`Grade.${f.value}`)})) ?? [];
+    default:
+      pickerOptions.value = field.options?.map(f => ({text: f.text, value: t(f.value)})) ?? [];
       break;
   };
   pickerField.value = field;
   showPicker.value = true;
 };
 
+interface SelectedType {
+  selectedIndexes: number[]
+  selectedOptions: FieldOption[]
+  selectedValues: string[]
+}
+
 const onConfirm = (
-  {selectedValues}: 
-  {selectedValues: string[]}
+  selected: SelectedType
 ) => {
+  console.log("onConfirm", selected)
+  if (selected.selectedOptions[0]) {
+    const memberStore = useMemberStore();
+    memberStore.memberPickerId = selected.selectedOptions[0].id ?? "";
+  };
+
   if (!pickerField.value) return;
-  pickerField.value.value = selectedValues[0] ?? '';
+  pickerField.value.value = selected.selectedValues[0] ?? '';
   showPicker.value = false;
 };
 

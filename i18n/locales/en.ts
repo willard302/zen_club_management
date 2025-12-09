@@ -9,6 +9,7 @@ export default {
   create: "Create",
   created_at: "Created at",
   created_by: "Created by",
+  date: "Date",
   day: "Day",
   delete: "Delete",
   department: "Department",
@@ -40,6 +41,7 @@ export default {
   register:"Register",
   roles: "Roles",
   start_at: "Start",
+  status: "Status",
   student_id: "Student Id",
   submit: "Submit",
   title: "Title",
@@ -97,6 +99,7 @@ export default {
     select_birthdate: "Please select your birthdate"
   },
   Member: {
+    attendance: "Member Attendance",
     list: "Member List",
     tracker: "Member Tracker"
   },

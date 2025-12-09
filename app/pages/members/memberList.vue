@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import MemberCard from './components/MemberCard.vue';
-import { role_options, grade_options } from '~/data/data';
 import type { ButtonItem, FieldItem } from '~/types/data.types';
 import type { MemebersInsert } from '~/types/supabase';
+import MemberCard from './components/MemberCard.vue';
+import { role_options, grade_options, hierarchy_options } from '~/data/data';
 const { fieldsToDatabase } = useConverter();
 const { getMember, getMembers, insertMember, rmMember } = useDataBase();
-const mainStore = useMainStore();
 const memberStore = useMemberStore();
 const { t } = useI18n();
 
@@ -41,12 +40,20 @@ const fieldItems: FieldItem[] = reactive([
     message: 'Hints.enter_birthday'
   },
   { 
+    label: "hierarchy",
+    value: "", 
+    name: "hierarchy", 
+    required: true,
+    message: 'Hints.enter_hierarchy',
+    options: hierarchy_options.map(o => ({text: t(o), value: o}))
+  },
+  { 
     label: "role",
     value: "", 
     name: "club_role", 
     required: true,
     message: 'Hints.enter_role',
-    options: role_options.map(o => ({text: t(`Role.${o.text}`), value: o.value}))
+    options: role_options.map(o => ({text: t(o), value: o}))
   },
   { 
     label: "department",
@@ -62,7 +69,7 @@ const fieldItems: FieldItem[] = reactive([
     name: "grade", 
     required: false,
     message: 'Hints.enter_grade',
-    options: grade_options.map(o => ({text: t(`Grade.${o.text}`), value: o.value}))
+    options: grade_options.map(o => ({text: t(o), value: o}))
   },
   {
     label: "email",
@@ -82,16 +89,17 @@ const fieldItems: FieldItem[] = reactive([
 ]);
 
 const loadMembers = async() => {
-  if (!mainStore.user || !mainStore.user.id) throw new Error(`There is no user.`);
   const members = await getMembers();
   if (members && members.length !== 0) {
     contacts.value = members;
   };
   finished.value = true;
 };
+
 const handleOpenNewPanel = () => {
   showNewMemberForm.value = true;
 };
+
 const onEdit = async(item: string) => {
 
   const member = await getMember(item);
@@ -99,20 +107,34 @@ const onEdit = async(item: string) => {
 
   navigateTo('/members/memberData');
 };
+
 const onDelete = async(member_id: string) => {
   const result = await rmMember(member_id);
   if(result !== 204) return;
   showSuccessToast({message: "member delete successfully."});
   await loadMembers();
 };
+
 const onSubmit = async() => {
   const newMember: MemebersInsert = fieldsToDatabase(fieldItems);
-  if (newMember) {
-    const result = await insertMember(newMember);
-    console.log("insert member result: ", result)
+  
+  if (newMember.club_role) {
+    newMember.club_role = reverseMapRole[newMember.club_role];
   };
+
+  if (newMember.grade) {
+    newMember.grade = reverseMapGrade[newMember.grade];
+  };
+
+  if (newMember.hierarchy) {
+    newMember.hierarchy = reverseMapHierarchy[newMember.hierarchy];
+  };
+
+  if (newMember) await insertMember(newMember);
   showNewMemberForm.value = false;
+  loadMembers();
 };
+
 const handleOnClick = async(event: string) => {
   if (event === 'cancel') {
     showNewMemberForm.value = false

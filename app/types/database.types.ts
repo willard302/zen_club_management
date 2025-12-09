@@ -167,7 +167,6 @@ export type Database = {
       member_tracker: {
         Row: {
           contact_date: string | null
-          contact_way: string | null
           created_at: string
           created_by: string
           id: string
@@ -177,7 +176,6 @@ export type Database = {
         }
         Insert: {
           contact_date?: string | null
-          contact_way?: string | null
           created_at?: string
           created_by?: string
           id?: string
@@ -187,7 +185,6 @@ export type Database = {
         }
         Update: {
           contact_date?: string | null
-          contact_way?: string | null
           created_at?: string
           created_by?: string
           id?: string
@@ -347,20 +344,29 @@ export type Database = {
     Enums: {
       attendance_status: "attendance" | "lateness" | "leave" | "absence"
       club_role:
-        | "admin"
-        | "teacher"
-        | "counselor"
-        | "president"
-        | "vice_president"
-        | "team_director"
-        | "deputy_team_director"
-        | "committee_member"
-        | "member"
-        | "new_member"
-        | "guest"
+        | "Role.admin"
+        | "Role.teacher"
+        | "Role.counselor"
+        | "Role.president"
+        | "Role.vice_president"
+        | "Role.team_director"
+        | "Role.deputy_team_director"
+        | "Role.committee_member"
+        | "Role.member"
+        | "Role.new_member"
+        | "Role.guest"
       event_recurrence: "none" | "daily" | "weekly" | "monthly" | "yearly"
-      grade: "freshman" | "sophomore" | "junior" | "senior" | "graduate"
-      hierarchy: "core_officers" | "officers" | "members" | "associate_members"
+      grade:
+        | "Grade.freshman"
+        | "Grade.sophomore"
+        | "Grade.junior"
+        | "Grade.senior"
+        | "Grade.graduate"
+      hierarchy:
+        | "Hierarchy.core_officers"
+        | "Hierarchy.officers"
+        | "Hierarchy.members"
+        | "Hierarchy.associate_members"
     }
     CompositeTypes: {
       event_extended: {
@@ -502,21 +508,32 @@ export const Constants = {
     Enums: {
       attendance_status: ["attendance", "lateness", "leave", "absence"],
       club_role: [
-        "admin",
-        "teacher",
-        "counselor",
-        "president",
-        "vice_president",
-        "team_director",
-        "deputy_team_director",
-        "committee_member",
-        "member",
-        "new_member",
-        "guest",
+        "Role.admin",
+        "Role.teacher",
+        "Role.counselor",
+        "Role.president",
+        "Role.vice_president",
+        "Role.team_director",
+        "Role.deputy_team_director",
+        "Role.committee_member",
+        "Role.member",
+        "Role.new_member",
+        "Role.guest",
       ],
       event_recurrence: ["none", "daily", "weekly", "monthly", "yearly"],
-      grade: ["freshman", "sophomore", "junior", "senior", "graduate"],
-      hierarchy: ["core_officers", "officers", "members", "associate_members"],
+      grade: [
+        "Grade.freshman",
+        "Grade.sophomore",
+        "Grade.junior",
+        "Grade.senior",
+        "Grade.graduate",
+      ],
+      hierarchy: [
+        "Hierarchy.core_officers",
+        "Hierarchy.officers",
+        "Hierarchy.members",
+        "Hierarchy.associate_members",
+      ],
     },
   },
 } as const

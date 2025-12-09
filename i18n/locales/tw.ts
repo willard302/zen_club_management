@@ -9,6 +9,7 @@ export default {
   create: "創建",
   created_at: "創建日",
   created_by: "創建人",
+  date: "日期",
   day: "日",
   delete: "刪除",
   department: "科系",
@@ -40,6 +41,7 @@ export default {
   register: "註冊",
   role: "身份",
   start_at: "開始時間",
+  status: "狀態",
   student_id: "學號",
   submit: "提交",
   title: "標題",
@@ -97,6 +99,7 @@ export default {
     select_birthdate: "請選擇您的出生日期"
   },
   Member: {
+    attendance: "社員出席",
     list: "社員清單",
     tracker: "社員追蹤"
   },

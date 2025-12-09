@@ -2,7 +2,8 @@
 const router = useRouter();
 const lists = reactive([
   { title: 'Member.list', path: '/members/memberList' },
-  { title: 'Member.tracker', path: '/members/memberTracker' }
+  { title: 'Member.tracker', path: '/members/memberTracker' },
+  { title: 'Member.attendance', path: '/members/memberAttendance' }
 ]);
 </script>
 
