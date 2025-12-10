@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      accounting_book: {
+        Row: {
+          accountant: string
+          amount: number
+          category: string
+          created_at: string
+          date: string
+          id: string
+          note: string
+          payee: string
+          type: string
+        }
+        Insert: {
+          accountant?: string
+          amount?: number
+          category?: string
+          created_at?: string
+          date?: string
+          id?: string
+          note?: string
+          payee?: string
+          type?: string
+        }
+        Update: {
+          accountant?: string
+          amount?: number
+          category?: string
+          created_at?: string
+          date?: string
+          id?: string
+          note?: string
+          payee?: string
+          type?: string
+        }
+        Relationships: []
+      }
       attendance: {
         Row: {
           created_at: string
@@ -125,42 +161,6 @@ export type Database = {
           recurrence?: Database["public"]["Enums"]["event_recurrence"]
           start_at?: string
           title?: string
-        }
-        Relationships: []
-      }
-      finance_record: {
-        Row: {
-          accountant: string
-          amount: number
-          category: string
-          created_at: string
-          date: string
-          id: string
-          note: string
-          payee: string
-          type: string
-        }
-        Insert: {
-          accountant?: string
-          amount?: number
-          category?: string
-          created_at?: string
-          date?: string
-          id?: string
-          note?: string
-          payee?: string
-          type?: string
-        }
-        Update: {
-          accountant?: string
-          amount?: number
-          category?: string
-          created_at?: string
-          date?: string
-          id?: string
-          note?: string
-          payee?: string
-          type?: string
         }
         Relationships: []
       }

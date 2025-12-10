@@ -10,3 +10,5 @@ export const attendance_options = Enums['attendance_status'];
 export const grade_options = Enums['grade'];
 
 export const event_recurrence_options = Enums['event_recurrence'];
+
+export const account_type_options = ['income', 'expense']

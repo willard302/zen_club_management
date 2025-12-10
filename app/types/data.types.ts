@@ -1,22 +1,5 @@
-import type { EventsInsert, EventsUpdate, FinancesInsert, MemebersInsert, MemebersRow, MemebersUpdate, TrackersInsert, TrackersRow, UserInsert, UserRow, UserUpdate } from "./supabase";
+import type { EventsInsert, EventsUpdate, MemebersRow, MemebersUpdate, TrackersInsert } from "./supabase";
 import type { ButtonNativeType, FieldType } from "vant";
-
-export type MainStoreState = {
-  isAuthenticated: boolean
-  user: UserInsert | UserUpdate
-  tabBarActive: string
-  defaultAvatar: string
-  locale: string
-  showTabbar: boolean
-};
-
-export type EventStoreState = {
-  event: EventsInsert | EventsUpdate
-};
-
-export type FinanceStoreState = {
-  records: FinancesInsert[]
-};
 
 export type MemberItem = {
   id: string,
