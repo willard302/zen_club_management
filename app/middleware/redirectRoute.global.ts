@@ -3,7 +3,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const { logout } = useAuth();
   const mainStore = useMainStore();
 
-  if (!mainStore.isAuthenticated || mainStore.user === null) {
+  if (!mainStore.isAuthenticated || mainStore.userInfo === null) {
     console.log("not authenticated...")
     logout();
   }

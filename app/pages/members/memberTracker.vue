@@ -112,7 +112,7 @@ const onSubmit = async() => {
 
   Object.assign(formData, {
     member_id: memberStore.memberPickerId,
-    created_by: mainStore.user.name
+    created_by: mainStore.userInfo.name
   });
 
   try {

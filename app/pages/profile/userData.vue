@@ -8,12 +8,12 @@ const { updateUser } = useDataBase();
 const isEditable = ref(false);
 
 const onSubmit = async (val: Partial<UserRow>) => {
-  if (!mainStore.user || !mainStore.user.id) throw new Error("There is no user data or user id.");
+  if (!mainStore.userInfo || !mainStore.userInfo.id) throw new Error("There is no user data or user id.");
 
   showLoadingToast({message: "Loading..."});
 
   mainStore.setUser(val)
-  await updateUser(mainStore.user.id, mainStore.user);
+  await updateUser(mainStore.userInfo.id, mainStore.userInfo);
   
   showSuccessToast({
     message: 'saved success!',
@@ -27,7 +27,7 @@ const onEdit = (val:boolean) => {
 </script>
 <template>
   <UserForm 
-    :user-data="mainStore.user"
+    :user-data="mainStore.userInfo"
     :editable="isEditable"
     @editable="onEdit"
     @submit="onSubmit"

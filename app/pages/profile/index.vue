@@ -7,8 +7,8 @@ const { logout } = useAuth();
 const { updateUser } = useDataBase();
 
 onMounted(() => {
-  if (!mainStore.user || !mainStore.user.id ) throw new Error("There is no user, user_id.");
-  username.value = mainStore.user.name ?? "guest";
+  if (!mainStore.userInfo || !mainStore.userInfo.id ) throw new Error("There is no user, user_id.");
+  username.value = mainStore.userInfo.name ?? "guest";
 });
 
 const isEdit = ref(false);
@@ -19,10 +19,10 @@ const lists = reactive([
 ]);
 
 const handleToggleState = async() => {
-  const userId = mainStore.user?.id;
+  const userId = mainStore.userInfo?.id;
   if (!userId) throw new Error("There is no id.");
 
-  if (isEdit.value) await updateUser(userId, { 'name': mainStore.user.name });
+  if (isEdit.value) await updateUser(userId, { 'name': mainStore.userInfo.name });
 
   isEdit.value = !isEdit.value;
 };
@@ -46,7 +46,7 @@ const handleLogout = async () => {
         <div class="profile__heading">
           <div class="status">
             <van-cell-group inset>
-              <van-field v-model="mainStore.user.name" input-align="center" :disabled="!isEdit" />
+              <van-field v-model="mainStore.userInfo.name" input-align="center" :disabled="!isEdit" />
             </van-cell-group>
             <van-button v-if="!isEdit" @click="handleToggleState()">
               <font-awesome :icon="['fas', 'pen']" />

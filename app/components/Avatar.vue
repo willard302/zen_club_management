@@ -7,14 +7,14 @@ const { updateUser, getUser } = useDataBase();
 const mainStore = useMainStore();
 
 const avatar_url = ref<UploaderFileListItem[]>([
-  { url: mainStore.avatarUrl }
+  { url: mainStore.userInfo.avatar_url }
 ]);
 
 const onAfterRead = async (
   fileItem: UploaderFileListItem | UploaderFileListItem[]
 ) => {
-  if (!mainStore.user || !mainStore.user.id) throw `There is no user or userId.`;
-  const user_id = mainStore.user.id;
+  if (!mainStore.userInfo || !mainStore.userInfo.id) throw `There is no user or userId.`;
+  const user_id = mainStore.userInfo.id;
 
   const user = await getUser(user_id);
   if (!user) return;
@@ -28,8 +28,8 @@ const onAfterRead = async (
   avatar_url.value = [{ url: newUrl[0] }];
   const data = await updateUser(user_id, {avatar_url: newUrl[0]});
   if (!data) throw `there is no data`;
-  if (mainStore.user) {
-    Object.assign(mainStore.user, {avatar_url: newUrl[0]})
+  if (mainStore.userInfo) {
+    Object.assign(mainStore.userInfo, {avatar_url: newUrl[0]})
   };
 
   if (!oldUrl) throw "There is no oldUrl.";

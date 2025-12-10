@@ -57,7 +57,7 @@ const handleLogin = async(account: FieldItem[]) => {
       id: user_id,
       email: username as string,
       avatar_url: "https://vvbtzvedcvhxibozbryz.supabase.co/storage/v1/object/public/icc_avatar/1765174676551-model01w.png",
-      created_by: mainStore.user.name,
+      created_by: mainStore.userInfo.name,
     });
     if (newInfo) await insertUser(newInfo);
     navigateTo('/profile')

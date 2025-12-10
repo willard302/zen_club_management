@@ -4,7 +4,7 @@ import type { EventsInsert } from "~/types/supabase"
 
 export const useConverter = () => {
   const mainStore = useMainStore();
-  const author = mainStore.user?.name;
+  const author = mainStore.userInfo?.name;
 
   const fieldsToDatabase = (fields: FieldItem[]): EventsInsert => {
     
