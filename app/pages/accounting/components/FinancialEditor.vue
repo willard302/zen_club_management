@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const financeStore = useFinanceStore();
+const accountingStore = useAccountingStore();
 const type = ref<'income' | 'expense'>('income');
 const category = ref('');
 const amount = ref<number>(0);
@@ -17,7 +17,7 @@ const onSubmit = () => {
     return;
   };
 
-  financeStore.addRecord({
+  accountingStore.addRecord({
     id: crypto.randomUUID(),
     type: type.value,
     category: category.value,
