@@ -4,6 +4,7 @@ import MemberCard from './components/MemberCard.vue';
 import type { TrackersInsert } from '~/types/supabase';
 
 const { getMemberTrackers, insertMemberTracker, rmMemberTracker, getMembers } = useDataBase();
+const { fieldsToObjMember } = useConverter();
 
 const mainStore = useMainStore();
 const memberStore = useMemberStore();
@@ -91,19 +92,10 @@ const loadMemberTrackers = async() => {
   };
 };
 
-const fieldsToDatabase = (fields: FieldItem[]): TrackersInsert => {
-  
-  const tracker: any = {};
-  fields.forEach(f => {
-    tracker[f.name] = f.value;
-  });
-
-  return tracker as TrackersInsert;
-};
 
 const onSubmit = async() => {
 
-  const formData: TrackersInsert = fieldsToDatabase(fieldItems.value);
+  const formData: TrackersInsert = fieldsToObjMember(fieldItems.value);
   
   if (!formData.member_status) {
     showFailToast("請填寫完整資訊");

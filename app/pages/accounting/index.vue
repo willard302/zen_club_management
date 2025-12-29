@@ -4,9 +4,14 @@ import AccountingCard from '~/pages/accounting/components/AccountingCard.vue';
 import { account_type_options } from '~/data/data';
 
 const { t } = useI18n();
+const { insertAccounting, getAccountings, rmAccounting } = useDataBase();
+const { fieldsToObjAccounting } = useConverter();
 const accountingStore = useAccountingStore();
 
 const showNewAccounting = ref(false);
+const loading = ref(false);
+const finished = ref(false);
+
 const fieldItems: FieldItem[] = reactive([
   { 
     label: "type",
@@ -16,9 +21,9 @@ const fieldItems: FieldItem[] = reactive([
     options: account_type_options.map(o => ({text: t(o), value: o}))
   },
   { 
-    label: "category",
+    label: "activity",
     value: "", 
-    name: "category", 
+    name: "activity", 
     type: "text",
     required: true
   },
@@ -37,9 +42,9 @@ const fieldItems: FieldItem[] = reactive([
     required: true
   },
   { 
-    label: "payee",
+    label: "payer",
     value: "", 
-    name: "payee", 
+    name: "payer", 
     type: "text",
     required: true
   },
@@ -51,9 +56,9 @@ const fieldItems: FieldItem[] = reactive([
     required: true
   },
   { 
-    label: "note",
+    label: "remark",
     value: "", 
-    name: "note", 
+    name: "remark", 
     type: "text",
     required: true
   },
@@ -64,12 +69,30 @@ const buttonItems: ButtonItem[] = [
   { text: "cancel", type: "button", action: "cancel" }
 ];
 
+const loadAccounting = async() => {
+  loading.value = true;
+  accountingStore.records = await getAccountings();
+  loading.value = false;
+  finished.value = true;
+}
+
 const handleOpenNewPanel = () => {
   showNewAccounting.value = true;
 };
 
-const onSubmit = async() => {
-  console.log("onsubmit")
+const onSubmit = async(target: FieldItem[]) => {
+  const accountingInfo = await fieldsToObjAccounting(target);
+
+  if (accountingInfo.type) {
+    accountingInfo.type = reverseMapAccounting[accountingInfo.type];
+  };
+
+  const result = await insertAccounting(accountingInfo)
+  if (result) {
+    showSuccessToast("insert accounting successfully.")
+    showNewAccounting.value = false;
+    loadAccounting();
+  };
 };
 
 const handleOnClick = async(event: string) => {
@@ -80,25 +103,40 @@ const handleOnClick = async(event: string) => {
     case "edit":
       navigateTo('/accounting/components/FinancialEditor')
       break;
-  }
-  
+  };
 };
+
+const onDelete = async(accounting_id: string) => {
+  const result = await rmAccounting(accounting_id);
+  if (result !== 204) return;
+  showSuccessToast("record delete successfully.");
+  await loadAccounting();
+}
 </script>
 
 <template>
   <div>
-    <AccountingCard 
-      v-for="record in accountingStore.records"
-      :key="record.id"
-      :category="record.category"
-      :amount="record.amount"
-      :note="record.note"
-      :date="record.date"
-      :payee="record.payee"
-      :accountant="record.accountant"
-      :type="record.type ?? ''"
-      @edit="handleOnClick"
-    />
+    <van-list
+      v-model:loading="loading"
+      :finished="finished"
+      :finished-text="'no more'"
+      @load="loadAccounting"
+    >
+      <AccountingCard 
+        v-for="record in accountingStore.records"
+        :key="record.id"
+        :id="record.id"
+        :activity="record.activity"
+        :amount="record.amount"
+        :remark="record.remark"
+        :date="record.date"
+        :payer="record.payer"
+        :accountant="record.accountant"
+        :type="record.type ?? ''"
+        @edit="handleOnClick"
+        @delete="onDelete"
+      />
+    </van-list>
     <van-floating-bubble icon="plus" @click="handleOpenNewPanel" />
     <van-popup 
       v-model:show="showNewAccounting" 

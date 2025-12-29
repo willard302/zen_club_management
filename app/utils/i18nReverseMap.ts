@@ -34,7 +34,7 @@ export const reverseMapGrade: Record<string, string> = {
   "Senior": "Grade.senior",
   "社青": "Grade.graduate",
   "Graduate": "Grade.graduate"
-}
+};
 
 export const reverseMapHierarchy: Record<string, string> = {
   "核心幹部": "Hierarchy.core_officers",
@@ -45,4 +45,11 @@ export const reverseMapHierarchy: Record<string, string> = {
   "Members": "Hierarchy.members",
   "外圍社員": "Hierarchy.associate_members",
   "Associate Members": "Hierarchy.associate_members",
+};
+
+export const reverseMapAccounting: Record<string, string> = {
+  "收入": "income",
+  "Income": "income",
+  "支出": "expense",
+  "Expense": "expense"
 }

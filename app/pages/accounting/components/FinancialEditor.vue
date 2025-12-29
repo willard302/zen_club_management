@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const accountingStore = useAccountingStore();
 const type = ref<'income' | 'expense'>('income');
-const category = ref('');
+const activity = ref('');
 const amount = ref<number>(0);
-const note = ref('');
+const remark = ref('');
 const showTypePicker = ref(false);
 
 const onTypeConfirm = (value: string) => {
@@ -12,7 +12,7 @@ const onTypeConfirm = (value: string) => {
 };
 
 const onSubmit = () => {
-  if (!amount.value || !category.value) {
+  if (!amount.value || !activity.value) {
     showToast({ message: "請輸入完整資料" });
     return;
   };
@@ -20,15 +20,15 @@ const onSubmit = () => {
   accountingStore.addRecord({
     id: crypto.randomUUID(),
     type: type.value,
-    category: category.value,
+    activity: activity.value,
     amount: amount.value,
     date: new Date().toISOString(),
-    note: note.value
+    remark: remark.value
   });
 
-  category.value = '';
+  activity.value = '';
   amount.value = 0;
-  note.value = '';
+  remark.value = '';
 
 }
 </script>
@@ -36,9 +36,9 @@ const onSubmit = () => {
 <template>
   <van-form @submit="onSubmit">
     <van-field v-model="type" label="類型" placeholder="收入/支出" is-link readonly @click="showTypePicker = true" />
-    <van-field v-model="category" label="分類" placeholder="餐飲/交通/娛樂" />
+    <van-field v-model="activity" label="分類" placeholder="餐飲/交通/娛樂" />
     <van-field v-model.number="amount" label="金額" type="number" />
-    <van-field v-model="note" label="備註" placeholder="選填" />
+    <van-field v-model="remark" label="備註" placeholder="選填" />
     <van-button round block type="primary" native-type="submit">新增</van-button>
   </van-form>
   <van-popup v-model:show="showTypePicker" position="bottom">

@@ -17,35 +17,35 @@ export type Database = {
       accounting_book: {
         Row: {
           accountant: string
+          activity: string
           amount: number
-          category: string
           created_at: string
           date: string
           id: string
-          note: string
-          payee: string
+          payer: string
+          remark: string
           type: string
         }
         Insert: {
           accountant?: string
+          activity?: string
           amount?: number
-          category?: string
           created_at?: string
           date?: string
           id?: string
-          note?: string
-          payee?: string
+          payer?: string
+          remark?: string
           type?: string
         }
         Update: {
           accountant?: string
+          activity?: string
           amount?: number
-          category?: string
           created_at?: string
           date?: string
           id?: string
-          note?: string
-          payee?: string
+          payer?: string
+          remark?: string
           type?: string
         }
         Relationships: []

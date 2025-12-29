@@ -49,7 +49,7 @@ export const useStorage = () => {
       .remove(filesToDelete);
     if (error) throw `Delete error: ${error.message}`;
     console.log(`Deleted files: `, data);
-  }
+  };
 
   return {
     uploadFile,

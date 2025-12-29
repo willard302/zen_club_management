@@ -1,6 +1,6 @@
 import type { TrackerWithMember } from "~/types/data.types";
 import type { Database } from "~/types/database.types"
-import type { EventsInsert, MemebersInsert, MemebersUpdate, TrackersInsert, UserInsert, UserUpdate } from "~/types/supabase";
+import type { AccountingInsert, EventsInsert, MemebersInsert, MemebersUpdate, TrackersInsert, UserInsert, UserUpdate } from "~/types/supabase";
 
 export const useDataBase = () => {
   const client = useSupabaseClient<Database>();
@@ -196,6 +196,36 @@ export const useDataBase = () => {
     return status;
   };
 
+  const getAccountings = async() => {
+    const {error, data} = await client
+      .from("accounting_book")
+      .select("*")
+      .order("date", {ascending: true})
+    
+    handleError(error, `Error fetching accounting ${error}`);
+    return data;
+  };
+
+  const insertAccounting = async(accountingInfo: AccountingInsert) => {
+    const {error, data} = await client
+      .from('accounting_book')
+      .insert(accountingInfo)
+      .select();
+    
+      handleError(error, `Error inserting accounting`);
+      return data;
+  };
+  
+  const rmAccounting = async(accounting_id: string) => {
+    const {error, status} = await client
+      .from('accounting_book')
+      .delete()
+      .eq('id', accounting_id);
+
+    handleError(error, `Error deleting accounting.`);
+    return status;
+  }
+
   return {
     getUser,
     insertUser,
@@ -212,6 +242,9 @@ export const useDataBase = () => {
     getEvent,
     getEvents,
     insertEvent,
-    rmEvent
+    rmEvent,
+    getAccountings,
+    insertAccounting,
+    rmAccounting
   }
 }

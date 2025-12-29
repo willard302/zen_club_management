@@ -1,10 +1,32 @@
 import type { EventInput } from "@fullcalendar/core/index.js"
-import type { FieldItem } from "~/types/data.types";
-import type { EventsInsert } from "~/types/supabase"
+import type { FieldItem, navItem } from "~/types/data.types";
+import type { AccountingInsert, EventsInsert, MemebersInsert, TrackersInsert } from "~/types/supabase"
 
 export const useConverter = () => {
   const mainStore = useMainStore();
   const author = mainStore.userInfo?.name;
+
+  const fieldsToObj = ( fields: FieldItem[] ) => {
+    const tracker: any = {};
+
+    fields.forEach(f => {
+      tracker[f.name] = f.value;
+    });
+
+    return tracker;
+  };
+
+  const fieldsToObjMember = (fields: FieldItem[]): MemebersInsert => {
+    return fieldsToObj(fields);
+  };
+
+  const fieldsToObjTracker = (fields: FieldItem[]): TrackersInsert => {
+    return fieldsToObj(fields);
+  };
+
+  const fieldsToObjAccounting = (fields: FieldItem[]): AccountingInsert => {
+    return fieldsToObj(fields);
+  };
 
   const fieldsToDatabase = (fields: FieldItem[]): EventsInsert => {
     
@@ -123,9 +145,14 @@ export const useConverter = () => {
     const seconds = String(date.getSeconds()).padStart(2, '0');
     return `${finalDate}T${hours}:${minutes}:${seconds}`;
   };
+
   
 
   return {
+    fieldsToObj,
+    fieldsToObjAccounting,
+    fieldsToObjMember,
+    fieldsToObjTracker,
     fieldsToDatabase,
     fieldsToDbEvents,
     dbToCalendarEvent,

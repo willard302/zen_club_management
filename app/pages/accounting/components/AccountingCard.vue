@@ -3,12 +3,12 @@ import type { ButtonType } from 'vant';
 
 const props = defineProps<{
   id?: string,
-  category?: string
+  activity?: string
   amount?: number,
-  note?: string,
+  remark?: string,
   date?: string,
   type: string,
-  payee?: string,
+  payer?: string,
   accountant?: string
 }>();
 
@@ -23,6 +23,10 @@ const buttons = ref<button[]>([
   {text: "edit", type: "primary" },
   {text: "delete", type: "danger"}
 ]);
+
+const content = computed(() => {
+  return `${props.activity} - ${props.remark}`
+})
 
 const onClick = (event: string) => {
   switch(event) {
@@ -46,21 +50,26 @@ const financialType = (type: string) => {
       <div class="card__header">
         <van-row gutter="20">
           <van-col class="name" span="8">{{ date }}</van-col>
-          <van-col class="label" span="8">{{ category }} - {{ note }}</van-col>
+          <van-col class="label" span="8">
+            <van-text-ellipsis 
+              rows="2"
+              :content="content" 
+            />
+          </van-col>
           <van-col span="8">
-            <van-tag :type="financialType(type)" plain>{{ type }}</van-tag>
+            <van-tag :type="financialType(type)" plain>{{ $t(type) }}</van-tag>
           </van-col>
         </van-row>
       </div>
       <div class="card__body">
         <van-row gutter="20">
           <van-col span="8">
-            <van-tag>{{ "account" }}</van-tag>
+            <van-tag>{{ $t("accountant") }}</van-tag>
             {{ accountant }}
           </van-col>
           <van-col span="8">
-            <van-tag>{{ "pay" }}</van-tag>
-            {{ payee }}
+            <van-tag>{{ $t("payer") }}</van-tag>
+            {{ payer }}
           </van-col>
           <van-col span="8">{{ amount }}</van-col>
         </van-row>
